@@ -1,0 +1,4 @@
+Send Show me {Route}
+Send Go to {Route}
+Send Bring up {Route}
+AMAZON.HelpIntent open
