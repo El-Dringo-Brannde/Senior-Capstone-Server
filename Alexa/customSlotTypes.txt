@@ -1,3 +1,18 @@
+ROUTE_VALUE 
 test
 home
 kelly smells
+
+TYPE_VALUE
+SAles
+
+WHICH_VALUE
+Ford
+BMW 
+Mazda
+Subaru
+
+TIME_VALUE
+2015
+2016
+2017
