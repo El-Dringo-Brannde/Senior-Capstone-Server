@@ -1,0 +1,16 @@
+{
+   "intents": [
+      {
+         "slots": [
+            {
+               "name": "Route",
+               "type": "ROUTE_VALUE"
+            }
+         ],
+         "intent": "Send"
+      },
+      {
+         "intent": "AMAZON.HelpIntent"
+      }
+   ]
+}

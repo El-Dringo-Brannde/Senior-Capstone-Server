@@ -1,0 +1,14 @@
+{
+  "name": "localserver",
+  "version": "1.0.0",
+  "description": "A local server that will connect to the amazon EC2 instance via a websocket to get instant updates.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brandon Dring",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io-client": "^2.0.4"
+  }
+}
