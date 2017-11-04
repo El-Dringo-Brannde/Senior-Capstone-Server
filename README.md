@@ -1,4 +1,4 @@
-# Senior-Capstone-Server
+# Senior-Capstone-Server ![alt text](https://travis-ci.org/El-Dringo-Brannde/Senior-Capstone-Server.svg?branch=master "Build Status")
 A place for all web server stuff related to the Capstone Project
 
 # Alexa 
