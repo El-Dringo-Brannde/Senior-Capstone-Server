@@ -1,4 +1,7 @@
 Send Show me {Route}
 Send Go to {Route}
 Send Bring up {Route}
+Send What is {Route}
+Send Show me {Which} {Type} for {Time}
 AMAZON.HelpIntent open
+AMAZON.StopIntent exit
