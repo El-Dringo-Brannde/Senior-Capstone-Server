@@ -3,45 +3,45 @@ module.exports = function controlRoutes(intent, session, callback) {
    const Route = intent.slots.Route;
    let repromptText = '';
    let sessionAttributes = {};
-   const shouldEndSession = true;
    let speechOutput = '';
-   var routeVal = Route.value;
+   try {
+      var routeVal = Route.value;
+   } catch (err) { }
+
    var buildResponse = require('./buildResponse')
-   var http = require('http');
+   var rp = require('request-promise');
+   console.log(buildQueryString())
 
-   if (Route) {
-      //Update 
-      var httpPromise = new Promise(function (resolve, reject) {
-         http.get({
-            host: '34.215.212.179',
-            path: '/test',
-            port: '3005'
-         }, function (response) {
-            resolve(response);
-         });
-      });
-      httpPromise.then(
-         function (data) {
-            var rawData = '';
-            data.on('data', chunk => rawData += chunk)
-            data.on('end', () => sendBackReturnedData(cardTitle, Route, rawData, callback))
-         },
-         function (err) {
-            console.log('An error occurred:', err);
-         }
-      );
+   if (Object.keys(intent.slots).length == 1)
+      rp('http://34.215.212.179:3005/' + routeVal.toLowerCase())
+         .then(resp => sendBackReturnedData(cardTitle, Route, resp, callback))
+         .catch(err => handleErr(err));
 
-   } else {
-      speechOutput = "Please try again";
-      repromptText = "Please try again";
-      callback(sessionAttributes, buildResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+   else
+      rp('http://34.215.212.179:3005/' + buildQueryString())
+         .then(resp => sendBackReturnedData(cardTitle, Route, resp, callback))
+         .catch(err => handleErr(err));
+
+   function buildQueryString() {
+      var query = '';
+      console.log(intent.slots)
+      for (var i in intent.slots) {
+         if (intent.slots[i].value)
+            query += intent.slots[i].value + '/'
+      }
+
+      return query
    }
 
+   function handleErr(err) {
+      speechOutput = "What was that? I couldn't understand you, please try again";
+      repromptText = err;
+      callback(sessionAttributes, buildResponse(cardTitle, speechOutput, repromptText, false));
+   }
 
-
-   function sendBackReturnedData(cardTitle, Route, rawData, callback) {
+   function sendBackReturnedData(cardTitle, Route, data, callback) {
       var sessionAttributes = {};
-      var speechOutput = "Ok, I went to the " + Route.value + " route. And I got " + JSON.parse(rawData).data;
+      var speechOutput = "Ok, I went to the " + Route.value + " route. And I got " + JSON.parse(data).data;
       var repromptText = "Ok, I going back to the " + Route.value + " route.";
       callback(sessionAttributes, buildResponse(cardTitle, speechOutput, repromptText, false));
    }
