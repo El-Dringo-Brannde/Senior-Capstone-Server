@@ -1,6 +1,6 @@
 'use strict';
 var http = require('http');
-
+var request = require('request');
 // --------------- Helpers that build all of the responses -----------------------
 
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
@@ -51,7 +51,7 @@ function getWelcomeResponse(callback) {
 
 function handleSessionEndRequest(callback) {
    const cardTitle = 'Session Ended';
-   const speechOutput = 'Thank you for trying the Alexa Skills Kit sample. Have a nice day!';
+   const speechOutput = 'Thank you for trying the Look Boss, No Hands program. Have a nice day!';
    // Setting this to true ends the session and exits the skill.
    const shouldEndSession = true;
 
@@ -60,20 +60,46 @@ function handleSessionEndRequest(callback) {
 
 function controlRoutes(intent, session, callback) {
    const cardTitle = intent.name;
-   const Route = intent.slots.Route;
+   const data_type = intent.slots.Type;
+   const brand = intent.slots.Which;
+   const when = intent.slots.Time;
    let repromptText = '';
    let sessionAttributes = {};
    const shouldEndSession = true;
    let speechOutput = '';
    var routeVal = Route.value;
 
-   if (Route) {
-      //Update 
-      var httpPromise = new Promise(function (resolve, reject) {
+   if (data_type && brand && when) {
+      //Update
+      var options = {
+        url: '34.215.212.179:3000/request',
+        method: 'POST',
+        json: {
+          "time": when,
+          "brand": brand
+        }
+      }
+      request(options, function(err, res, body){
+        if(!error){
+          console.log('done!');
+          console.log('Function called succesfully:', data);
+          speechOutput = "Your request is being processed. Please note that any data displayed is randomly created and is not intended to factually represent any real company.";
+          repromptText = "Your request is being processed. Please note that any data displayed is randomly created and is not intended to factually represent any real company.";
+          callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+        }
+        else{
+          console.log('error sending request');
+          speechOutput = "There was an error sending the request, please try again";
+          repromptText = "There was an error sending the request, please try again";
+          callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+        }
+      });
+    }
+    /*  var httpPromise = new Promise(function (resolve, reject) {
          http.get({
             host: '34.215.212.179',
-            path: '/test',
-            port: '3001'
+            path: '/request',
+            port: '3000'
          }, function (response) {
             resolve('Done Sending');
          });
@@ -81,17 +107,17 @@ function controlRoutes(intent, session, callback) {
       httpPromise.then(
          function (data) {
             console.log('Function called succesfully:', data);
-            speechOutput = "Ok, I went to the " + Route.value + " route.";
-            repromptText = "Ok, I going back to the " + Route.value + " route.";
+            speechOutput = "Your request is being processed. Please note that any data displayed is randomly created and is not intended to factually represent any real company.";
+            repromptText = "Your request is being processed. Please note that any data displayed is randomly created and is not intended to factually represent any real company.";
             callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
          },
          function (err) {
             console.log('An error occurred:', err);
          }
-      );
+      );*/
 
    } else {
-      speechOutput = "Please try again";
+      speechOutput = "I'm sorry, I didn't quite get that. Please ask in the form of show me sales for brand in year.";
       repromptText = "Please try again";
       callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
    }
