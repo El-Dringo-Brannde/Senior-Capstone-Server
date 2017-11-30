@@ -67,7 +67,6 @@ function controlRoutes(intent, session, callback) {
    let sessionAttributes = {};
    const shouldEndSession = true;
    let speechOutput = '';
-   var routeVal = Route.value;
 
    if (data_type && brand && when) {
       //Update
@@ -80,9 +79,9 @@ function controlRoutes(intent, session, callback) {
         }
       }
       request(options, function(err, res, body){
-        if(!error){
+        if(!err){
           console.log('done!');
-          console.log('Function called succesfully:', data);
+          console.log('Function called succesfully:');
           speechOutput = "Your request is being processed. Please note that any data displayed is randomly created and is not intended to factually represent any real company.";
           repromptText = "Your request is being processed. Please note that any data displayed is randomly created and is not intended to factually represent any real company.";
           callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
@@ -94,7 +93,6 @@ function controlRoutes(intent, session, callback) {
           callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
         }
       });
-    }
     /*  var httpPromise = new Promise(function (resolve, reject) {
          http.get({
             host: '34.215.212.179',
