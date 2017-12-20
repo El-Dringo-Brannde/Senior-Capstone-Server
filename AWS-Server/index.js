@@ -1,23 +1,36 @@
 var app = require('express')();
 var webSocketServer = require('http').createServer(app);
 var io = require('socket.io')(webSocketServer);
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
-io.on('connection', function (socket) {
-   socket.broadcast.emit("connected", {
-      message: "Ping!"
-   });
+var Mongo = require('mongodb').MongoClient;
+var mongo_url = 'mongodb://localhost';
 
-   socket.on('message', function(msg){
-     socket.emit('message', 'received');
-   });
+io.on('connection', function(socket){
+        socket.emit('message', 'socket connected');
 
+        app.post('/request', (req, res) => {
+                console.log('received');
+                console.log(req.body);
+                res.writeHead(200, {'Content-Type': 'text/html'});
+                res.end('thanks');
 
-   app.post('/request', (req, res) => {
-     res.status(200).send("hello");
-     console.log("got a post");
+                Mongo.connect(mongo_url, function(err, db){
+                if(err) return console.log(err);
 
-   });
+                const sales = db.db('sdb');
+                console.log('connected');
+                sales.collection("sales").find(req.body).toArray(function(err, result){
+                        if(err) throw err;
+                        console.log(result);
+                        db.close();
+                        socket.emit('data', req.body);
+                        });
+                });
+        });
 });
 
-app.listen(3005, () => console.log("Server up and running on port 3005!"))
-webSocketServer.listen(3000, () => console.log("Websocket running on port 3000!"));
+
+app.listen(3008, () => console.log("Server up and running on port 3008!"))
+webSocketServer.listen(3002, () => console.log("Websocket running on port 3002!"));
