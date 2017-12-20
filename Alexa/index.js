@@ -60,18 +60,19 @@ function handleSessionEndRequest(callback) {
 
 function controlRoutes(intent, session, callback) {
    const cardTitle = intent.name;
-   const data_type = intent.slots.Type;
-   const brand = intent.slots.Which;
-   const when = intent.slots.Time;
+   const data_type = intent.slots.Type.value;
+   const brand = intent.slots.Which.value;
+   const when = intent.slots.Time.value;
+   
    let repromptText = '';
    let sessionAttributes = {};
-   const shouldEndSession = true;
+   const shouldEndSession = false;
    let speechOutput = '';
 
    if (data_type && brand && when) {
       //Update
       var options = {
-        url: '34.215.212.179:3000/request',
+        url: 'http://34.215.212.179:3008/request',
         method: 'POST',
         json: {
           "time": when,
@@ -82,8 +83,8 @@ function controlRoutes(intent, session, callback) {
         if(!err){
           console.log('done!');
           console.log('Function called succesfully:');
-          speechOutput = "Your request is being processed. Please note that any data displayed is randomly created and is not intended to factually represent any real company.";
-          repromptText = "Your request is being processed. Please note that any data displayed is randomly created and is not intended to factually represent any real company.";
+          speechOutput = "Please wait while your request is processed.";
+          repromptText = "";
           callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
         }
         else{
@@ -93,27 +94,6 @@ function controlRoutes(intent, session, callback) {
           callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
         }
       });
-    /*  var httpPromise = new Promise(function (resolve, reject) {
-         http.get({
-            host: '34.215.212.179',
-            path: '/request',
-            port: '3000'
-         }, function (response) {
-            resolve('Done Sending');
-         });
-      });
-      httpPromise.then(
-         function (data) {
-            console.log('Function called succesfully:', data);
-            speechOutput = "Your request is being processed. Please note that any data displayed is randomly created and is not intended to factually represent any real company.";
-            repromptText = "Your request is being processed. Please note that any data displayed is randomly created and is not intended to factually represent any real company.";
-            callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
-         },
-         function (err) {
-            console.log('An error occurred:', err);
-         }
-      );*/
-
    } else {
       speechOutput = "I'm sorry, I didn't quite get that. Please ask in the form of show me sales for brand in year.";
       repromptText = "Please try again";
@@ -145,6 +125,8 @@ function onIntent(intentRequest, session, callback) {
    // Dispatch to your skill's intent handlers
    if (intentName === 'Server_Request') {
       controlRoutes(intent, session, callback);
+   } else if (intentName == 'Show'){
+	   controlRoutes(intent, session, callback);
    } else if (intentName === 'AMAZON.HelpIntent') {
       getWelcomeResponse(callback);
    } else if (intentName === 'AMAZON.StopIntent' || intentName === 'AMAZON.CancelIntent') {
