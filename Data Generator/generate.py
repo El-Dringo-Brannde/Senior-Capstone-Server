@@ -7,15 +7,24 @@ from datetime import datetime
 
 # setup mongodb connection
 client = MongoClient()
-db = client.sdb.sales  # TODO change for AWS
+db = client.sdb.sales
 
 # setup faker instance
 f = Faker('en_US')
 f.seed_instance()
 
 # create some fake brands
-brands = ["Apache", "Eagle", "Brute", "Coil", "Delta"]
-# TODO add makes for models
+brands = ["apache", "eagle", "brute", "coil", "delta"]
+
+# make_model = {
+#     "apache": ["zentoro", "adder", "bullet", "cabrio", "jester"],
+#     "eagle": ['banshee', 'felon', 'blade', 'pheonix', 'voodoo'],
+#     'brute': ['seminole', 'blazer', 'journey', 'pony', 'cheetah'],
+#     'coil': ['tesla', 'reaper', 'sentinel', 'comet', 'buffalo'],
+#     'delta': ['pinnacle', 'romero', 'premier', 'ingot', 'locus']
+# } Use at somepoint
+
+color_list = ["Red", "Silver", "White", "Blue", "Black"]
 
 cities = []
 states = []
@@ -106,7 +115,7 @@ def gen_sale(dealer_index):
   # generate random information for the sale
   name = f.name()
   license = f.license_plate()
-  color = f.color_name()
+  color = color_list[random.randint(0, 4)]
   # get a random brand from the brands the given dealership sells
   brand = dealers[dealer_index]["brands"][random.randrange(
       0, len(dealers[dealer_index]["brands"]))]
@@ -155,7 +164,6 @@ for i in range(len(dealers)):
   db.update_one({'_id': dealer_id}, {'$inc': {'mtd': 1}})
 
   # create the set number of sales
-  # TODO change to generate random number of sales
   for j in range(random.randint(5, 50)):
     # add the sale to the entry
     db.update_one(

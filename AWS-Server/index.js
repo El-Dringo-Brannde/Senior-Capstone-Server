@@ -1,42 +1,20 @@
 var app = require('express')();
 var webSocketServer = require('http').createServer(app);
 var io = require('socket.io')(webSocketServer);
+var mongo = require('mongodb');
+var initServer = require('./server/init')(mongo, io);
+var salesRoutes = require('./routes/sales');
+var testRoutes = require('./routes/test');
 
-io.on('connection', function (socket) {
-    socket.emit("connected", {
-        message: "Ping!"
-    });
-    console.log("ping!");
-    socket.on('message', function (msg) {
-        console.log('in');
-        socket.emit('message', 'its working');
-        socket.emit('message', 'second');
-    });
-});
+webSocketServer.listen(3002, () => console.log("Server starting.."));
 
-app.get('/', (req, res) => {
-    res.send("Hello world!");
-});
+initServer.then(mongoSocket => {
+   var mongo = mongoSocket.db;
+   var socket = mongoSocket.socket;
 
+   app.use('/sales', salesRoutes(mongoSocket, socket));
+   app.use('/test', testRoutes(mongoSocket, socket));
+   // ^^^ Init routes
 
-
-app.get('/:which/:type/:time/', (req, res) => {
-    res.json({
-        data: 'here is ' + req.params.which + ' ' + req.params.type + ' for ' + req.params.time
-    });
-});
-
-app.get("/test", (req, res) => {
-    console.log("You did the thing!!!");
-    res.json({ data: "You did the thing!!!" });
-});
-
-app.get('/repeat', (req, res) => {
-    console.log(req)
-    res.json({ data: "You did the thing!!!" });
-});
-
-
-app.get('/ryan', (req, res) => {
-    res.json({ data: "Ryan smells" });
+   app.listen(3105, () => console.log('Server initialize finished, running on port 3105!')); // start server
 });
