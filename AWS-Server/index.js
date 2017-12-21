@@ -1,36 +1,18 @@
 var app = require('express')();
-var webSocketServer = require('http').createServer(app);
-var io = require('socket.io')(webSocketServer);
+var io = require('socket.io')(3002); // start socket.io
+var mongo = require('mongodb');
+var initServer = require('./server/init')(mongo);
+var salesRoutes = require('./routes/sales');
+var testRoutes = require('./routes/test');
 var bodyParser = require('body-parser');
-app.use(bodyParser.json());
 
-var Mongo = require('mongodb').MongoClient;
-var mongo_url = 'mongodb://localhost';
 
-io.on('connection', function(socket){
-        socket.emit('message', 'socket connected');
+initServer.then(mongoSocket => {
+   app.use(bodyParser.json());
 
-        app.post('/request', (req, res) => {
-                console.log('received');
-                console.log(req.body);
-                res.writeHead(200, {'Content-Type': 'text/html'});
-                res.end('thanks');
+   app.use('/sales', salesRoutes(mongoSocket, io));
+   app.use('/test', testRoutes(mongoSocket, io));
+   // ^^^ Init routes
 
-                Mongo.connect(mongo_url, function(err, db){
-                if(err) return console.log(err);
-
-                const sales = db.db('sdb');
-                console.log('connected');
-                sales.collection("sales").find(req.body).toArray(function(err, result){
-                        if(err) throw err;
-                        console.log(result);
-                        db.close();
-                        socket.emit('data', req.body);
-                        });
-                });
-        });
+   app.listen(3105, () => console.log('Server initialize finished, running on port 3105!')); // start server
 });
-
-
-app.listen(3008, () => console.log("Server up and running on port 3008!"))
-webSocketServer.listen(3002, () => console.log("Websocket running on port 3002!"));

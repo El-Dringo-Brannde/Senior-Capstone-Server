@@ -1,7 +1,24 @@
-describe('dummy test stuff', function () {
-   var assert = require('chai').assert
+var request = require('supertest')
+request = request('http://34.215.212.179:3000')
+var assert = require('chai').assert
 
-   it('1 should be equal to 1', function () {
-      assert(1, 1)
-   })
-})
+
+//request.get('/').expect(200,function(err) {
+  //  console.log(err);
+//});
+
+request
+    .get('/')
+    .end(function(err,res){
+       assert.equal(res.text, "Hello world!");
+       console.log(res.text);
+    });
+
+request
+    .get('/test')
+    .end(function(err,res){
+       // assert.equal(res.text, "Hello world!");
+        console.log(res.text);
+    });
+
+
