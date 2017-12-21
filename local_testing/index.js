@@ -5,3 +5,7 @@ socket.on('connect', function(msg) {
 });
 socket.on('event', function(data) {});
 socket.on('disconnect', function() {});
+
+socket.on('data', (data) => {
+   console.log(data);
+});

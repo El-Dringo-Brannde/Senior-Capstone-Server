@@ -7,7 +7,7 @@ from datetime import datetime
 
 # setup mongodb connection
 client = MongoClient()
-db = client.sdb.sales
+db = client.seniorCapstone.sales
 
 # setup faker instance
 f = Faker('en_US')

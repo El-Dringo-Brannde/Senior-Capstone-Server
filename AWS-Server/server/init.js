@@ -1,16 +1,9 @@
 var url = require('./../config/mongoURL');
-module.exports = function(mongo, io) {
+
+module.exports = function(mongo) {
    return new Promise((res, rej) => {
-      mongo.connect(url, (err, db) => {
-         io.on('connection', function(socket) {
-            socket.emit("connected", {
-               message: "Ping!"
-            });
-            res({
-               socket: socket,
-               db: db
-            });
-         });
+      mongo.connect(url, (err, database) => {
+         res(database.db('seniorCapstone'));
       });
    });
-}; // jesus this is ugly, keeping it in one file
+};

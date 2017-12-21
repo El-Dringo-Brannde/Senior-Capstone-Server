@@ -1,1 +1,1 @@
-module.exports = 'mongodb://localhost:27017/Brewster';
+module.exports = 'mongodb://localhost:27017';
