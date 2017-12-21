@@ -1,6 +1,6 @@
 'use strict';
 var http = require('http');
-
+var request = require('request');
 // --------------- Helpers that build all of the responses -----------------------
 
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
@@ -51,7 +51,7 @@ function getWelcomeResponse(callback) {
 
 function handleSessionEndRequest(callback) {
    const cardTitle = 'Session Ended';
-   const speechOutput = 'Thank you for trying the Alexa Skills Kit sample. Have a nice day!';
+   const speechOutput = 'Thank you for trying the Look Boss, No Hands program. Have a nice day!';
    // Setting this to true ends the session and exits the skill.
    const shouldEndSession = true;
 
@@ -60,38 +60,42 @@ function handleSessionEndRequest(callback) {
 
 function controlRoutes(intent, session, callback) {
    const cardTitle = intent.name;
-   const Route = intent.slots.Route;
+   const data_type = intent.slots.Type.value;
+   const brand = intent.slots.Which.value;
+   const when = intent.slots.Time.value;
+   
    let repromptText = '';
    let sessionAttributes = {};
-   const shouldEndSession = true;
+   const shouldEndSession = false;
    let speechOutput = '';
-   var routeVal = Route.value;
 
-   if (Route) {
-      //Update 
-      var httpPromise = new Promise(function (resolve, reject) {
-         http.get({
-            host: '34.215.212.179',
-            path: '/test',
-            port: '3001'
-         }, function (response) {
-            resolve('Done Sending');
-         });
+   if (data_type && brand && when) {
+      //Update
+      var options = {
+        url: 'http://34.215.212.179:3008/request',
+        method: 'POST',
+        json: {
+          "time": when,
+          "brand": brand
+        }
+      }
+      request(options, function(err, res, body){
+        if(!err){
+          console.log('done!');
+          console.log('Function called succesfully:');
+          speechOutput = "Please wait while your request is processed.";
+          repromptText = "";
+          callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+        }
+        else{
+          console.log('error sending request');
+          speechOutput = "There was an error sending the request, please try again";
+          repromptText = "There was an error sending the request, please try again";
+          callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+        }
       });
-      httpPromise.then(
-         function (data) {
-            console.log('Function called succesfully:', data);
-            speechOutput = "Ok, I went to the " + Route.value + " route.";
-            repromptText = "Ok, I going back to the " + Route.value + " route.";
-            callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
-         },
-         function (err) {
-            console.log('An error occurred:', err);
-         }
-      );
-
    } else {
-      speechOutput = "Please try again";
+      speechOutput = "I'm sorry, I didn't quite get that. Please ask in the form of show me sales for brand in year.";
       repromptText = "Please try again";
       callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
    }
@@ -121,6 +125,8 @@ function onIntent(intentRequest, session, callback) {
    // Dispatch to your skill's intent handlers
    if (intentName === 'Server_Request') {
       controlRoutes(intent, session, callback);
+   } else if (intentName == 'Show'){
+	   controlRoutes(intent, session, callback);
    } else if (intentName === 'AMAZON.HelpIntent') {
       getWelcomeResponse(callback);
    } else if (intentName === 'AMAZON.StopIntent' || intentName === 'AMAZON.CancelIntent') {

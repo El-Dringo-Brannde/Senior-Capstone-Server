@@ -1,24 +1,17 @@
-var request = require('supertest')
-request = request('http://34.215.212.179:3000')
-var assert = require('chai').assert
+var request = require('supertest');
+request = request('http://34.215.212.179:3105');
+var assert = require('chai').assert;
 
 
-//request.get('/').expect(200,function(err) {
-  //  console.log(err);
-//});
 
-request
-    .get('/')
-    .end(function(err,res){
-       assert.equal(res.text, "Hello world!");
-       console.log(res.text);
-    });
+describe('basic server testing', function() {
 
-request
-    .get('/test')
-    .end(function(err,res){
-       // assert.equal(res.text, "Hello world!");
-        console.log(res.text);
-    });
-
-
+   it('should get back hello world', function(done) {
+      request
+         .get('/test')
+         .end(function(err, res) {
+            assert.equal(res.body.data, "You did the thing!!!");
+            done();
+         });
+   });
+});
