@@ -5,10 +5,11 @@ var initServer = require('./server/init')(mongo);
 var salesRoutes = require('./routes/sales');
 var testRoutes = require('./routes/test');
 var bodyParser = require('body-parser');
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }))
 
 initServer.then(mongoSocket => {
-   app.use(bodyParser.json());
+
 
    app.use('/sales', salesRoutes(mongoSocket, io));
    app.use('/test', testRoutes(mongoSocket, io));
