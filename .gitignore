@@ -1,0 +1,3 @@
+**/node_modules/**
+AWS-Server/config/mongoURL*
+package-*
