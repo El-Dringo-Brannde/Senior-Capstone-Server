@@ -5,12 +5,27 @@
             {
                "name": "Route",
                "type": "ROUTE_VALUE"
+            },
+            {
+               "name": "Type",
+               "type": "TYPE_VALUE"
+            },
+            {
+               "name": "Which",
+               "type": "WHICH_VALUE"
+            },
+            {
+               "name": "Time",
+               "type": "TIME_VALUE"
             }
          ],
-         "intent": "Send"
+         "intent": "Show"
       },
       {
          "intent": "AMAZON.HelpIntent"
+      },
+      {
+         "intent": "AMAZON.StopIntent"
       }
    ]
 }

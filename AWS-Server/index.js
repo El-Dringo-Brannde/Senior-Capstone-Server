@@ -1,22 +1,19 @@
 var app = require('express')();
-var webSocketServer = require('http').createServer(app);
-var io = require('socket.io')(webSocketServer);
+var io = require('socket.io')(3002); // start socket.io
+var mongo = require('mongodb');
+var initServer = require('./server/init')(mongo);
+var salesRoutes = require('./routes/sales');
+var testRoutes = require('./routes/test');
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }))
 
-io.on('connection', function (socket) {
-   socket.broadcast.emit("connected", {
-      message: "Ping!"
-   });
-   console.log("ping!")
+initServer.then(mongoSocket => {
+
+
+   app.use('/sales', salesRoutes(mongoSocket, io));
+   app.use('/test', testRoutes(mongoSocket, io));
+   // ^^^ Init routes
+
+   app.listen(3105, () => console.log('Server initialize finished, running on port 3105!')); // start server
 });
-
-app.get('/', (req, res) => {
-   res.send("Hello world!");
-})
-
-app.get("/test", (req, res) => {
-   console.log("You did the thing!!!");
-   res.send("You did the thing!!!")
-})
-
-app.listen(3005, () => console.log("Server up and running on port 3005!"))
-webSocketServer.listen(3000, () => console.log("Websocket running on port 3000!"));

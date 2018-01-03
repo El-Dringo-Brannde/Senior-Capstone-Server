@@ -1,0 +1,28 @@
+{
+   "name": "senior-capstone-server",
+   "version": "1.0.0",
+   "description": "A home for all server related things",
+   "main": "index.js",
+   "scripts": {
+      "test": "mocha AWS-Server/test/*.js"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/El-Dringo-Brannde/Senior-Capstone-Server.git"
+   },
+   "author": "Brandon Dring",
+   "license": "ISC",
+   "bugs": {
+      "url": "https://github.com/El-Dringo-Brannde/Senior-Capstone-Server/issues"
+   },
+   "homepage": "https://github.com/El-Dringo-Brannde/Senior-Capstone-Server#readme",
+   "devDependencies": {},
+   "dependencies": {
+      "assert": "^1.4.1",
+      "chai": "^4.1.2",
+      "express": "^4.16.2",
+      "mocha": "^4.0.1",
+      "socket.io-client": "^2.0.4",
+      "supertest": "^3.0.0"
+   }
+}
