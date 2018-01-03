@@ -1,9 +1,10 @@
-var events = require('./../events')()
+var intentEvents = require('./../intentEvents')
 
 module.exports = class baseHandler {
    constructor(event, context) {
       this.event = event;
       this.context = context;
+      this.intentEvents = new intentEvents();
       this.onInit();
    }
 
@@ -19,8 +20,8 @@ module.exports = class baseHandler {
 
    intentRequest() {
       var self = this;
-      events.onIntent(this.event.request,
-         events.session,
+      this.intentEvents.onIntent(this.event.request,
+         this.intentEvents.session,
          function callback(sessionAttributes, speechletResponse) {
             self.context.succeed(self.buildResponse(sessionAttributes, speechletResponse));
          });
@@ -28,8 +29,7 @@ module.exports = class baseHandler {
 
    launchRequest() {
       var self = this;
-      onLaunch(this.event.request,
-         this.event.session,
+      this.intentEvents.onLaunch(
          function callback(sessionAttributes, speechletResponse) {
             self.context.succeed(self.buildResponse(sessionAttributes, speechletResponse));
          }
@@ -37,7 +37,7 @@ module.exports = class baseHandler {
    }
 
    sessionEndedRequest() {
-      onSessionEnded(this.event.request, this.event.session);
+      this.intentEvents.onSessionEnded(this.event.request, this.event.session);
       this.context.succeed();
    }
 }

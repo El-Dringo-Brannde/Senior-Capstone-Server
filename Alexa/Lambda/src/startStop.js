@@ -11,8 +11,6 @@ module.exports = class startStop {
       this.repromptText = "How can I help you?";
 
       this.buildResponse = buildResponse;
-
-
    }
 
    handleSessionEndRequest(callback) {
