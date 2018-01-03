@@ -63,7 +63,7 @@ function controlRoutes(intent, session, callback) {
    const data_type = intent.slots.Type.value;
    const brand = intent.slots.Which.value;
    const when = intent.slots.Time.value;
-   
+
    let repromptText = '';
    let sessionAttributes = {};
    const shouldEndSession = false;
@@ -72,27 +72,27 @@ function controlRoutes(intent, session, callback) {
    if (data_type && brand && when) {
       //Update
       var options = {
-        url: 'http://34.215.212.179:3008/request',
-        method: 'POST',
-        json: {
-          "time": when,
-          "brand": brand
-        }
+         url: 'http://34.215.212.179:3008/request',
+         method: 'POST',
+         json: {
+            "time": when,
+            "brand": brand
+         }
       }
-      request(options, function(err, res, body){
-        if(!err){
-          console.log('done!');
-          console.log('Function called succesfully:');
-          speechOutput = "Please wait while your request is processed.";
-          repromptText = "";
-          callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
-        }
-        else{
-          console.log('error sending request');
-          speechOutput = "There was an error sending the request, please try again";
-          repromptText = "There was an error sending the request, please try again";
-          callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
-        }
+      request(options, function (err, res, body) {
+         if (!err) {
+            console.log('done!');
+            console.log('Function called succesfully:');
+            speechOutput = "Please wait while your request is processed.";
+            repromptText = "";
+            callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+         }
+         else {
+            console.log('error sending request');
+            speechOutput = "There was an error sending the request, please try again";
+            repromptText = "There was an error sending the request, please try again";
+            callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+         }
       });
    } else {
       speechOutput = "I'm sorry, I didn't quite get that. Please ask in the form of show me sales for brand in year.";
@@ -125,8 +125,8 @@ function onIntent(intentRequest, session, callback) {
    // Dispatch to your skill's intent handlers
    if (intentName === 'Server_Request') {
       controlRoutes(intent, session, callback);
-   } else if (intentName == 'Show'){
-	   controlRoutes(intent, session, callback);
+   } else if (intentName == 'Show') {
+      controlRoutes(intent, session, callback);
    } else if (intentName === 'AMAZON.HelpIntent') {
       getWelcomeResponse(callback);
    } else if (intentName === 'AMAZON.StopIntent' || intentName === 'AMAZON.CancelIntent') {
