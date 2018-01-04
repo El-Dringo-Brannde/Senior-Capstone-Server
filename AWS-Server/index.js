@@ -9,8 +9,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 
 initServer.then(mongoSocket => {
-
-
    app.use('/sales', salesRoutes(mongoSocket, io));
    app.use('/test', testRoutes(mongoSocket, io));
    // ^^^ Init routes
