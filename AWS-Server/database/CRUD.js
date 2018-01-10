@@ -5,7 +5,11 @@ module.exports = class CRUD {
       this.mongoObj = mongoObj;
       this.db = mongo.collection(collName);
       this.socket = socket;
+
+      this.onInit();
    }
+
+   onInit() { } // virtual func
 
    read(query, res) {
       this.db.find(query)

@@ -7,12 +7,42 @@ module.exports = function (mongo, socket) {
 
    router.use((req, res, next) => next()); // init
 
-   router.get('/', (req, res) => {
-      sales.read(req.params, res);
+   // [GET] total sales for city/state
+   router.get('/city/state', async (req, res) => {
+      let city = req.params.city
+      let state = req.params.state;
+      let data = await sales.allByCityState(city, state);
+      res.json({
+         data: data
+      });
    });
 
-   router.get('/:state/:city', (req, res) => {
-      sales.parseRequest(req.params, res);
+   router.get('/city', async (req, res) => {
+      let city = req.query.city
+      let data = await sales.allByCity(city);
+      res.json({
+         data: data
+      });
+   });
+
+   router.get('/state', async (req, res) => {
+      let city = req.query.state
+      let data = await sales.allByState(city);
+      res.json({
+         data: data
+      });
+   });
+
+   // [GET] breakdown by brand followed by query params
+   // query: state=California&city=Oakland&brand=eagle
+   router.get('/brand', async (req, res) => {
+      let city = req.query.city;
+      let state = req.query.state;
+      let brand = req.query.brand;
+      let data = await sales.cityStateBrand(city, state, brand);
+      res.json({
+         data: data
+      })
    });
 
    return router;
