@@ -1,5 +1,6 @@
 var app = require('express')();
-var io = require('socket.io')(3002); // start socket.io
+var io = require('./websockets/sockets'); // init SocketIO
+io = io.getSocket();
 var mongo = require('mongodb');
 var initServer = require('./server/init')(mongo);
 var salesRoutes = require('./routes/sales');
