@@ -33,8 +33,8 @@ module.exports = function (mongo, socket) {
       });
    });
 
-   // [GET] breakdown by brand followed by query params
-   // query: state=California&city=Oakland&brand=eagle
+   // [GET] breakdown by brands followed by query params
+   // query: state=California&city=Oakland
    router.get('/brand', async (req, res) => {
       let city = req.query.city;
       let state = req.query.state;

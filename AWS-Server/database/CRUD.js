@@ -11,13 +11,7 @@ module.exports = class CRUD {
 
    onInit() { } // virtual func
 
-   read(query, res) {
-      this.db.find(query)
-         .toArray((err, result) => {
-            this.socket.emit('data', result);
-            res.json({
-               data: result
-            });
-         });
+   async read(query) {
+      return await this.db.find(query).toArray();
    }
 };

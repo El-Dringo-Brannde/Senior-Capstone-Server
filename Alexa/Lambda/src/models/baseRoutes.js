@@ -15,9 +15,22 @@ module.exports = class baseRoutes {
 
    buildQueryString(intentSlots) {
       var query = '';
+      console.log(intentSlots)
+
+      if (intentSlots.Type) {
+         query = intentSlots.Type.value + '/'
+         delete intentSlots.Type
+      }
+      if (intentSlots.Selector) {
+         query += intentSlots.Selector.value;
+         delete intentSlots.Selector
+      }
+
+      query += '?'
       for (var i in intentSlots)
          if (intentSlots[i].value)
-            query += intentSlots[i].value + '/'
+            query += intentSlots[i].name + '=' + intentSlots[i].value.toLowerCase() + '&'
+      console.log(query)
       return query
    }
 
@@ -31,10 +44,6 @@ module.exports = class baseRoutes {
    parseRoute(intent, callback) {
       const intentName = intent.name;
       const Route = intent.slots.Route;
-
-      try {
-         var routeVal = Route.value;
-      } catch (err) { }
 
       if (Object.keys(intent.slots).length == 1)
          this.sendRequest(routeVal.toLowerCase(), intentName, callback)

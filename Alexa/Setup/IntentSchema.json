@@ -3,10 +3,6 @@
       {
          "slots": [
             {
-               "name": "Route",
-               "type": "ROUTE_VALUE"
-            },
-            {
                "name": "Type",
                "type": "TYPE_VALUE"
             },
@@ -17,9 +13,21 @@
             {
                "name": "Time",
                "type": "TIME_VALUE"
+            },
+            {
+               "name": "City",
+               "type": "CITY_VALUE"
+            },
+            {
+               "name": "State",
+               "type": "STATE_VALUE"
+            },
+            {
+               "name": "Selector",
+               "type": "SELECTOR_VALUE"
             }
          ],
-         "intent": "Show"
+         "intent": "Capstone"
       },
       {
          "intent": "AMAZON.HelpIntent"

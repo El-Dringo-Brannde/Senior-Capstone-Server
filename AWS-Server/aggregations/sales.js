@@ -40,7 +40,7 @@ class salesAggregates extends mongo {
          },
          {
             $group: {
-               _id: brand + 'Sales',
+               _id: brand + ' sales',
                sales: {
                   $sum: '$sales.price'
                }
