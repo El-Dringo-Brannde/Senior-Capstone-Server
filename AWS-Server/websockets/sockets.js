@@ -24,7 +24,7 @@ class socketIO {
       return this.socket
    }
    socket.on('getRoom', function(msg){
-     socket.emit('setRoom', getRoom(parseInt(msg, 10));
+     socket.emit('reply', getRoom(parseInt(msg, 10));
    });
    returnData(data, session){
      io.to(getRoom(session)).emit('data', data);

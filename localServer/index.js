@@ -14,7 +14,7 @@ socket.on('connect', function(msg){
       socket.emit('getRoom', sessionID);
     }
 });
-socket.on('setRoom', function(msg){
+socket.on('reply', function(msg){
   room = parseInt(msg, 10);
   socket.join(room);
 });
