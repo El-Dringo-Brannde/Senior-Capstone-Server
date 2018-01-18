@@ -22,7 +22,38 @@ class salesAggregates extends mongo {
       }]
    }
 
-   cityStateByBrand(city, state, brand) {
+   cityStateByBrandBar(city, state, brand) {
+      return [
+         {
+            $match: {
+               'state': state,
+               'city': city,
+            }
+         },
+         {
+            $unwind: '$sales'
+         },
+         {
+            $match: {
+               'sales.brand': brand
+            }
+         },
+         {
+            $group: {
+               _id: {
+                  month: {
+                     $month: '$sales.date'
+                  }
+               },
+               sales: {
+                  $sum: '$sales.price'
+               }
+            }
+         }
+      ]
+   }
+
+   cityStateByBrandPie(city, state, brand) {
       return [
          {
             $match: {

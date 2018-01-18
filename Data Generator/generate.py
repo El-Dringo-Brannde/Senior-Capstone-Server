@@ -122,7 +122,7 @@ def gen_sale(dealer_index):
     # random price between 10k and 100k
     price = round(random.uniform(10000.99, 100000.99), 2)
     # random date between 30 days before now and today
-    date = datetime.combine(f.date_between(start_date="-30d", end_date="today"),
+    date = datetime.combine(f.date_between(start_date="-1y", end_date="today"),
                             datetime.min.time())  # TODO take range to pick between
 
     # create a sale dictionary from the given information
