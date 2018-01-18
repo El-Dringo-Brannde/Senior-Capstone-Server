@@ -38,7 +38,6 @@ module.exports = class sales extends salesAgg {
          returnObj[brand] = await this.aggregate(agg)
          returnObj[brand] = returnObj[brand][0]
       }
-      this.socket.emit('data', returnObj)
       return returnObj
-   } // ghetto way of doing math NOT in mongoDB 
+   } // ghetto way of doing math NOT in mongoDB
 };
