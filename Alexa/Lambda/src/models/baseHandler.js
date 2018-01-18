@@ -21,6 +21,7 @@ module.exports = class baseHandler {
    intentRequest() {
       var self = this;
       this.intentEvents.onIntent(this.event.request,
+         this.event.session.sessionId,
          this.intentEvents.session,
          function callback(sessionAttributes, speechletResponse) {
             self.context.succeed(self.buildResponse(sessionAttributes, speechletResponse));

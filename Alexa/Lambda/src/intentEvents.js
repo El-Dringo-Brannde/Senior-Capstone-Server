@@ -24,13 +24,13 @@ module.exports = class events {
    /**
    * Called when the user specifies an intent for this skill.
    */
-   onIntent(intentRequest, session, callback) {
+   onIntent(intentRequest, sessionID, callback) {
       const intent = intentRequest.intent;
       const intentName = intentRequest.intent.name;
 
       // Dispatch to your skill's intent handlers
       if (intentName === 'Capstone')
-         this.routes.goToRoute(intent, callback);
+         this.routes.goToRoute(intent, sessionID, callback);
       else if (intentName === 'AMAZON.HelpIntent')
          startStop.getWelcomeResponse(callback);
       else if (intentName === 'AMAZON.StopIntent' || intentName === 'AMAZON.CancelIntent')

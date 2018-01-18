@@ -41,20 +41,21 @@ module.exports = class baseRoutes {
    }
 
 
-   parseRoute(intent, callback) {
+   parseRoute(intent, sessionID, callback) {
       const intentName = intent.name;
       const Route = intent.slots.Route;
+      const sessionQuery = 'session=' + sessionID.toLowerCase();
 
       if (Object.keys(intent.slots).length == 1)
-         this.sendRequest(routeVal.toLowerCase(), intentName, callback)
+         this.sendRequest(routeVal.toLowerCase(), sessionQuery, intentName, callback)
       else {
          let route = this.buildQueryString(intent.slots)
-         this.sendRequest(route, intentName, callback)
+         this.sendRequest(route, sessionQuery, intentName, callback)
       }
    }
 
-   sendRequest(route, intentName, callback) {
-      this.rp(this.serverURL + route.toLowerCase())
+   sendRequest(route, sessionQuery, intentName, callback) {
+      this.rp(this.serverURL + route.toLowerCase() + sessionQuery)
          .then(resp => this.sendBackReturnedData(intentName, resp, callback))
          .catch(err => this.handleErr(err, callback));
    }
