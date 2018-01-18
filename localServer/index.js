@@ -4,20 +4,21 @@ var stdin = process.openStdin(); //needed for now to get the session number for 
 var sessionID = -1;
 
 stdin.addListener("data", function(d){
-  sessionID = parseInt(d, 10);
-  console.log("Joining room " + sessionID);
+  sessionID = d.toString().trim();
+  console.log("Session ID " + sessionID);
+  socket.emit('broadcast', sessionID);
 });
 
 socket.on('connect', function(msg){
-    console.log(msg)
-    if(sessionID > -1){
-      socket.emit('getRoom', sessionID);
-    }
+    //console.log(msg)
+    console.log(msg);
+
 });
-socket.on('reply', function(msg){
-  room = parseInt(msg, 10);
-  socket.join(room);
+
+socket.on('setRoom', function(msg){
+  console.log("Join room " + msg);
 });
+
 socket.on('data', function(data){
 	console.log(data);
 });

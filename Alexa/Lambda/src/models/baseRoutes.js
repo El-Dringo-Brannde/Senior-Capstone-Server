@@ -17,7 +17,7 @@ module.exports = class baseRoutes {
       var query = '';
       console.log(intentSlots)
 
-      if (intentSlots.Type) {
+      if (intentSlots.Type && intentSlots.Value) {
          query = intentSlots.Type.value + '/'
          delete intentSlots.Type
       }

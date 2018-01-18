@@ -1,5 +1,5 @@
 let socket = require('socket.io')(3002); // start socket.io
-let io = require('socket.io-emitter')({host: '127.0.0.1', port: '3002'});
+let io = require('socket.io-emitter')({host: 'localhost', port: '3002'});
 
 
 class socketIO {
@@ -20,12 +20,32 @@ class socketIO {
      return room;
    }
 
+   findRoom(id){
+     rooms.forEach(function(room){
+       if(room.endsWith(id))
+        return room;
+     });
+     return 0;
+   }
+
    getSocket() {
       return this.socket
    }
-   socket.on('getRoom', function(msg){
-     socket.emit('reply', getRoom(parseInt(msg, 10));
+
+   socket.on('connect', function(msg){
+
    });
+
+   socket.on('getRoom', function(msg){
+     var room = findRoom(msg);
+     if(room){
+      socket.emit('setRoom', findRoom(id));
+     }
+     else{
+       socket.emit('setRoom', "error");
+     }
+   });
+
    returnData(data, session){
      io.to(getRoom(session)).emit('data', data);
    }
