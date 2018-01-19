@@ -22,9 +22,11 @@ module.exports = class sales extends salesAgg {
       return await this.aggregate(agg)
    }
 
-   async allByCityState(city, state) {
+   async allByCityState(city, state, sessionID) {
       let matchObj = { city: city, state: state }
       let returnObj = {};
+
+      this.socket.newRoom(sessionID);
 
       let brands = await this.read(matchObj);
       brands = brands[0].brands;

@@ -26,7 +26,7 @@ class socketIO {
    newRoom(id){
      if(rooms.indexOf(id) == -1){
        rooms.push(id);
-       room = rooms[rooms.length - 1];
+       var room = rooms[rooms.length - 1];
       console.log("Added room " + room);
      }
    }
@@ -50,6 +50,7 @@ class socketIO {
      let self = this;
      socket.on('connect', function(con){
        console.log("New connection");
+       con.emit('setRoom', rooms[rooms.length - 1]);
        con.on('getRoom', (msg) => {
          console.log("Finding room " + msg);
          var room = self.findRoom(msg);
