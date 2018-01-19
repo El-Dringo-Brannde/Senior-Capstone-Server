@@ -46,7 +46,8 @@ module.exports = class baseRoutes {
 
    parseRoute(intent, sessionID, callback) {
       const intentName = intent.name;
-      const sessionQuery = 'session=' + sessionID.toLowerCase();
+      var strippedID = sessionID.split(".");
+      const sessionQuery = 'session=' + strippedID[1].toLowerCase();
 
       if (Object.keys(intent.slots).length == 1)
          this.sendRequest(routeVal.toLowerCase(), sessionQuery, intentName, callback)
@@ -58,6 +59,7 @@ module.exports = class baseRoutes {
    }
 
    sendRequest(route, sessionQuery, intentName, callback) {
+     console.log("session" + sessionQuery);
       this.rp(this.serverURL + route.toLowerCase() + sessionQuery)
          .then(resp => this.sendBackReturnedData(intentName, resp, callback))
          .catch(err => this.handleErr(err, callback));
