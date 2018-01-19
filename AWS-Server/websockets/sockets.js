@@ -1,9 +1,8 @@
 let socket = require('socket.io')(3002); // start socket.io
 let io = require('socket.io-emitter')({host: 'localhost', port: '3002'});
-
+let rooms = [];
 
 class socketIO {
-   let rooms = [];
 
    constructor() {
       this.socket = socket;
@@ -33,7 +32,7 @@ class socketIO {
    }
 
    socket.on('connect', function(msg){
-
+     
    });
 
    socket.on('getRoom', function(msg){
