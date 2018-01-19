@@ -1,4 +1,6 @@
-let socket = require('socket.io')(3002); // start socket.io
+let app = require('express')();
+let socketServer = require('http').createServer(app);
+let socket = require('socket.io')(socketServer); // start socket.io
 let io = require('socket.io-emitter')({host: 'localhost', port: '3002'});
 let rooms = [];
 
@@ -6,7 +8,7 @@ class socketIO {
 
    constructor() {
       this.socket = socket;
-      onInit();
+      this.onInit();
    }
 
    getRoom(id){
@@ -32,6 +34,7 @@ class socketIO {
       return this.socket
    }
    onInit(){
+     socketServer.listen(3002, () => console.log("Websocket server running on port 3002"));
      socket.on('connect', function(msg){
 
      });

@@ -1,5 +1,5 @@
 var app = require('express')();
-var io = require('./websockets/sockets')(3002); // start socket.io
+var io = require('./websockets/sockets'); // start socket.io
 io = io.getSocket();
 var mongo = require('mongodb');
 var initServer = require('./server/init')(mongo);
