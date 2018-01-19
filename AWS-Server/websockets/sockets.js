@@ -19,7 +19,7 @@ class socketIO {
       console.log("Added room " + room);
      }
 
-     console.log("Returning room + " room);
+     console.log("Returning room " + room);
      return room;
    }
 
@@ -27,7 +27,7 @@ class socketIO {
      console.log("Finding room matching " + id);
      rooms.forEach(function(room){
        if(room.endsWith(id))
-        console.log("Found room matching + " id + " at room " + room);
+        console.log("Found room matching " + id + " at room " + room);
         return room;
      });
      console.log("Did not find room matching " + id);
@@ -40,21 +40,20 @@ class socketIO {
    onInit(){
      socketServer.listen(3002, () => console.log("Websocket server running on port 3002"));
 
-     socket.on('connect', function(msg){
+     socket.on('connect', function(con){
        console.log("New connection");
-     });
-
-     socket.on('getRoom', function(msg){
-       console.log("Finding room " + msg);
-       var room = findRoom(msg);
-       if(room){
-         console.log("Found room, returning result");
-        socket.emit('setRoom', findRoom(id));
-       }
-       else{
-         console.log("Unable to find room, returning error");
-         socket.emit('setRoom', "error");
-       }
+       con.on('getRoom', (msg) => {
+         console.log("Finding room " + msg);
+         var room = findRoom(msg);
+         if(room){
+           console.log("Found room, returning result");
+          con.emit('setRoom', findRoom(id));
+         }
+         else{
+           console.log("Unable to find room, returning error");
+           con.emit('setRoom', "error");
+         }
+       });
      });
    }
 
