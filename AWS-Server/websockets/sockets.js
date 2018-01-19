@@ -23,6 +23,14 @@ class socketIO {
      return room;
    }
 
+   newRoom(id){
+     if(rooms.indexOf(id) == -1){
+       rooms.push(id);
+       room = rooms[rooms.length - 1];
+      console.log("Added room " + room);
+     }
+   }
+
    findRoom(id){
      console.log("Finding room matching " + id);
      rooms.forEach(function(room){

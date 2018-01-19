@@ -12,6 +12,7 @@ stdin.addListener("data", function(d){
 socket.on('connect', function(msg){
     //console.log(msg)
     console.log("Connected with message " + msg);
+    socket.emit('getRoom', "asdf");
 });
 
 socket.on('setRoom', function(msg){

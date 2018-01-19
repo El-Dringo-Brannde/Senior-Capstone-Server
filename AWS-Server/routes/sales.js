@@ -8,12 +8,11 @@ module.exports = function (mongo, socket) {
    router.use((req, res, next) => next()); // init
 
    // [GET] total sales for city/state
-   router.get('/city/state', async (req, res) => {
+   router.get('/state/city', async (req, res) => {
       let city = req.params.city
       let state = req.params.state;
-      let data = await sales.allByCityState(city, state);
-
-      this.socket.returnData(data, req.params.session);
+      let data = "success!";//await sales.allByCityState(city, state);
+      this.socket.newRoom(req.params.session);
       res.json({
          data: data
       });
