@@ -11,12 +11,11 @@ stdin.addListener("data", function(d){
 
 socket.on('connect', function(msg){
     //console.log(msg)
-    console.log("Connected with message " + msg);
-    socket.emit('getRoom', "asdf");
+    console.log("Connected to server");
 });
 
 socket.on('setRoom', function(msg){
-  console.log("Join room " + msg);
+  console.log("Session  " + msg);
 });
 
 socket.on('data', function(data){
