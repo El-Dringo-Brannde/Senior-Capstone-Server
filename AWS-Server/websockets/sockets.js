@@ -1,7 +1,6 @@
 let app = require('express')();
 let socketServer = require('http').createServer(app);
 let socket = require('socket.io')(socketServer); // start socket.io
-let io = require('socket.io-emitter')({host: 'localhost', port: '3002'});
 let rooms = [];
 
 class socketIO {
@@ -17,16 +16,21 @@ class socketIO {
      if(room == -1){
        rooms.push(id);
        room = rooms[rooms.length - 1];
+      console.log("Added room " + room);
      }
 
+     console.log("Returning room + " room);
      return room;
    }
 
    findRoom(id){
+     console.log("Finding room matching " + id);
      rooms.forEach(function(room){
        if(room.endsWith(id))
+        console.log("Found room matching + " id + " at room " + room);
         return room;
      });
+     console.log("Did not find room matching " + id);
      return 0;
    }
 
@@ -35,22 +39,27 @@ class socketIO {
    }
    onInit(){
      socketServer.listen(3002, () => console.log("Websocket server running on port 3002"));
-     socket.on('connect', function(msg){
 
+     socket.on('connect', function(msg){
+       console.log("New connection");
      });
 
      socket.on('getRoom', function(msg){
+       console.log("Finding room " + msg);
        var room = findRoom(msg);
        if(room){
+         console.log("Found room, returning result");
         socket.emit('setRoom', findRoom(id));
        }
        else{
+         console.log("Unable to find room, returning error");
          socket.emit('setRoom', "error");
        }
      });
    }
 
    returnData(data, session){
+     console.log("Returning DB data");
      io.to(getRoom(session)).emit('data', data);
    }
 }

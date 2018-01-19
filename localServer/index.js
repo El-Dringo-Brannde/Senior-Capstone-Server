@@ -6,13 +6,12 @@ var sessionID = -1;
 stdin.addListener("data", function(d){
   sessionID = d.toString().trim();
   console.log("Session ID " + sessionID);
-  socket.emit('broadcast', sessionID);
+  socket.emit('getRoom', sessionID);
 });
 
 socket.on('connect', function(msg){
     //console.log(msg)
-    console.log(msg);
-
+    console.log("Connected with message " + msg);
 });
 
 socket.on('setRoom', function(msg){
