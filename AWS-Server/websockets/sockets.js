@@ -6,6 +6,7 @@ class socketIO {
 
    constructor() {
       this.socket = socket;
+      onInit();
    }
 
    getRoom(id){
@@ -30,20 +31,21 @@ class socketIO {
    getSocket() {
       return this.socket
    }
+   onInit(){
+     socket.on('connect', function(msg){
 
-   socket.on('connect', function(msg){
-     
-   });
+     });
 
-   socket.on('getRoom', function(msg){
-     var room = findRoom(msg);
-     if(room){
-      socket.emit('setRoom', findRoom(id));
-     }
-     else{
-       socket.emit('setRoom', "error");
-     }
-   });
+     socket.on('getRoom', function(msg){
+       var room = findRoom(msg);
+       if(room){
+        socket.emit('setRoom', findRoom(id));
+       }
+       else{
+         socket.emit('setRoom', "error");
+       }
+     });
+   }
 
    returnData(data, session){
      io.to(getRoom(session)).emit('data', data);
