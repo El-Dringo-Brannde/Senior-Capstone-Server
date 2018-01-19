@@ -39,15 +39,15 @@ class socketIO {
    }
    onInit(){
      socketServer.listen(3002, () => console.log("Websocket server running on port 3002"));
-
+     let self = this;
      socket.on('connect', function(con){
        console.log("New connection");
        con.on('getRoom', (msg) => {
          console.log("Finding room " + msg);
-         var room = findRoom(msg);
+         var room = self.findRoom(msg);
          if(room){
            console.log("Found room, returning result");
-          con.emit('setRoom', findRoom(id));
+          con.emit('setRoom', room);
          }
          else{
            console.log("Unable to find room, returning error");
