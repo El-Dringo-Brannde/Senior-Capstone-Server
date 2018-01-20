@@ -30,10 +30,12 @@ module.exports = class baseHandler {
 
    launchRequest() {
       var self = this;
+      var sessionID = this.event.session.sessionId;
+
       this.intentEvents.onLaunch(
          function callback(sessionAttributes, speechletResponse) {
             self.context.succeed(self.buildResponse(sessionAttributes, speechletResponse));
-         }
+         }, sessionID
       );
    }
 

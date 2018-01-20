@@ -10,8 +10,8 @@ module.exports = class events {
    /**
     * Called when the user launches the skill without specifying what they want.
     */
-   onLaunch(callback) {
-      this.startStop.getWelcomeResponse(callback);
+   onLaunch(callback, sessionID) {
+      this.startStop.getWelcomeResponse(callback, sessionID);
    }
 
    /**
