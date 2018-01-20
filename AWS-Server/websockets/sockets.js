@@ -33,11 +33,12 @@ class socketIO {
 
    findRoom(id){
      console.log("Finding room matching " + id);
-     rooms.forEach(function(room){
-       if(room.endsWith(id))
-        console.log("Found room matching " + id + " at room " + room);
-        return room;
-     });
+     for(var i = 0; i < rooms.length; i++){
+       if(rooms[i].slice(-4).trim() == id.trim()){
+        console.log("Found room matching " + id + " at room " + i);
+        return rooms[i];
+      }
+     }
      console.log("Did not find room matching " + id);
      return 0;
    }
@@ -50,7 +51,6 @@ class socketIO {
      let self = this;
      socket.on('connect', function(con){
        console.log("New connection");
-       con.emit('setRoom', rooms[rooms.length - 1]);
        con.on('getRoom', (msg) => {
          console.log("Finding room " + msg);
          var room = self.findRoom(msg);

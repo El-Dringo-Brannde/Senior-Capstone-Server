@@ -7,6 +7,13 @@ module.exports = function (mongo, socket) {
 
    router.use((req, res, next) => next()); // init
 
+   router.get('/session', async (req, res) => {
+     let sessionID = req.query.session;
+     let session = await sales.newSession(sessionID);
+
+     res.sendStatus(200);
+   });
+
    // [GET] total sales for city/state
    router.get('/state/city', async (req, res) => {
       let city = req.query.city

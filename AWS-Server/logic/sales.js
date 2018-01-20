@@ -6,6 +6,11 @@ module.exports = class sales extends salesAgg {
       this.aggregateBuilder = new salesAgg(mongo, collName, socket);
    }
 
+   async newSession(sessionID){
+     this.socket.newRoom(sessionID);
+     return;
+   }
+
    async allByCity(city) {
       let matchObj = {
          city: city
