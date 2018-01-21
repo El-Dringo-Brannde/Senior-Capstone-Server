@@ -52,7 +52,7 @@ class salesAggregates {
       ]
    }
 
-   cityStateByBrandPie(city, state, brand) {
+   cityStateBarGroupBy(city, state, group) {
       return [
          {
             $match: {
@@ -64,13 +64,38 @@ class salesAggregates {
             $unwind: '$sales'
          },
          {
-            $match: {
-               'sales.brand': brand
+            $group: {
+               _id: {
+                  group: '$sales.' + group,
+                  month: {
+                     $month: '$sales.date'
+                  }
+               },
+               sales: {
+                  $sum: '$sales.price'
+               }
             }
          },
          {
+            $sort: { _id: 1 }
+         },
+      ]
+   }
+
+   cityStatePieGroupBy(city, state, group) {
+      return [
+         {
+            $match: {
+               'state': state,
+               'city': city,
+            }
+         },
+         {
+            $unwind: '$sales'
+         },
+         {
             $group: {
-               _id: brand + ' sales',
+               _id: '$sales.' + group,
                sales: {
                   $sum: '$sales.price'
                }

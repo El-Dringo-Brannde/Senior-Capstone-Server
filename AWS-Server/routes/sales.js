@@ -14,44 +14,40 @@ module.exports = function(mongo, socket) {
       res.sendStatus(200);
    });
 
-   // [GET] total sales for city/state
-   router.get('/state/city', async (req, res) => {
-      let city = req.query.city
-      let state = req.query.state;
-      let sessionID = req.query.session;
-
-      let data = await sales.allByCityState(city, state, sessionID);
+   /**
+    * [GET] city data with a grouping filter
+    *  query: group = brand | color_name
+    */
+   router.get('/city/:city', async (req, res) => {
+      let city = req.params.city
+      let grouping = req.query.group
+      let data = await sales.allByCity(city, group);
       res.json({
          data: data
       });
    });
 
-   router.get('/city', async (req, res) => {
-      let city = req.query.city
-      let data = await sales.allByCity(city);
-
+   /**
+    * [GET] state data with a grouping filter
+    * query: group = brand | color_name
+    */
+   router.get('/state/:state', async (req, res) => {
+      let city = req.params.state
+      let grouping = req.query.group
+      let data = await sales.allByState(city, grouping);
       res.json({
          data: data
       });
    });
 
-   router.get('/state', async (req, res) => {
-      let city = req.query.state
-      let data = await sales.allByState(city);
-
-      res.json({
-         data: data
-      });
-   });
-
-   // [GET] breakdown by brands followed by query query
-   // query: filter = brand \ color_name
+   // [GET] city state data with a grouping filter
+   // query: group = brand \ color_name
    router.get('/city/:city/state/:state', async (req, res) => {
       let city = req.params.city;
       let state = req.params.state;
-      let filter = req.query.filter;
+      let group = req.query.group;
 
-      let data = await sales.cityStateBrand(city, state, filter);
+      let data = await sales.cityStateGroupBy(city, state, group);
 
       res.json({
          data: data

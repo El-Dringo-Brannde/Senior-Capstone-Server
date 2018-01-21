@@ -1,26 +1,12 @@
 let salesAgg = require('./../aggregations/sales');
 let mongo = require('./../database/mongoDB');
+let salesUtility = require('./../utility/sales');
 
 module.exports = class sales extends mongo {
    constructor(mongo, collName, socket) {
       super(mongo, collName, socket);
       this.aggregateBuilder = new salesAgg(mongo, collName, socket);
-   }
-
-   monthDateToMonth(monthNumber) {
-      let months = ['January',
-         'February',
-         'March',
-         'April',
-         'May',
-         'June',
-         'July',
-         'August',
-         'September',
-         'October',
-         'November',
-         'December']
-      return months[monthNumber - 1];
+      this.utility = salesUtility
    }
 
    async newSession(sessionID) {
@@ -65,25 +51,18 @@ module.exports = class sales extends mongo {
       return returnObj
    } // ghetto way of doing math NOT in mongoDB
 
-   async cityStateBrand(city, state) {
-      let matchObj = { city: city, state: state }
+
+
+   async cityStateGroupBy(city, state, group) {
       let pieObject = {}, barObject = {};
-      let brands = await this.read(matchObj);
-      brands = brands[0].brands;
 
-      for (let brand of brands) {
-         let pieAgg = this.aggregateBuilder.cityStateByBrandPie(city, state, brand);
-         let barAgg = this.aggregateBuilder.cityStateByBrandBar(city, state, brand);
-         pieObject[brand] = await this.aggregate(pieAgg)
-         pieObject[brand] = pieObject[brand][0].sales
-         barObject[brand] = await this.aggregate(barAgg)
-      }
+      let pieAgg = this.aggregateBuilder.cityStatePieGroupBy(city, state, group);
+      pieObject = await this.aggregate(pieAgg)
+      pieObject = this.utility.arrayToObject(pieObject)
 
-      for (var brand in barObject)
-         for (var month in barObject[brand]) {
-            barObject[brand][month].month = this.monthDateToMonth(barObject[brand][month]._id.month)
-            delete barObject[brand][month]._id;
-         }
+      let barAgg = this.aggregateBuilder.cityStateBarGroupBy(city, state, group)
+      barObject = await this.aggregate(barAgg);
+      barObject = this.utility.pullGroupToObjectKey(barObject);
 
       this.socketIO.socket.emit('Bar_Chart', barObject)
       this.socketIO.socket.emit('Pie_Chart', pieObject)
