@@ -4,7 +4,7 @@ module.exports = class CRUD {
    constructor(mongo, collName, socket) {
       this.mongoObj = mongoObj;
       this.db = mongo.collection(collName);
-      this.socket = socket;
+      this.socketIO = socket;
 
       this.onInit();
    }

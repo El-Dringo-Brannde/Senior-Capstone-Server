@@ -1,6 +1,7 @@
-var salesAgg = require('./../aggregations/sales');
+let salesAgg = require('./../aggregations/sales');
+let mongo = require('./../database/mongoDB');
 
-module.exports = class sales extends salesAgg {
+module.exports = class sales extends mongo {
    constructor(mongo, collName, socket) {
       super(mongo, collName, socket);
       this.aggregateBuilder = new salesAgg(mongo, collName, socket);
@@ -22,9 +23,9 @@ module.exports = class sales extends salesAgg {
       return months[monthNumber - 1];
    }
 
-   async newSession(sessionID){
-     this.socket.newRoom(sessionID);
-     return;
+   async newSession(sessionID) {
+      this.socketIO.newRoom(sessionID);
+      return;
    }
 
    async allByCity(city) {
@@ -47,7 +48,7 @@ module.exports = class sales extends salesAgg {
       let matchObj = { city: city, state: state }
       let returnObj = {};
 
-      this.socket.newRoom(sessionID);
+      this.socketIO.newRoom(sessionID);
 
       let brands = await this.read(matchObj);
       brands = brands[0].brands;
@@ -84,8 +85,8 @@ module.exports = class sales extends salesAgg {
             delete barObject[brand][month]._id;
          }
 
-      this.socket.emit('Bar_Chart', barObject);
-      this.socket.emit('Pie_Chart', pieObject)
+      this.socketIO.socket.emit('Bar_Chart', barObject)
+      this.socketIO.socket.emit('Pie_Chart', pieObject)
       return {
          pieChart: pieObject,
          barChart: barObject

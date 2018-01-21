@@ -1,8 +1,7 @@
 let mongo = require('./../database/mongoDB');
 
-class salesAggregates extends mongo {
-   constructor(mongo, collName, socket) {
-      super(mongo, collName, socket);
+class salesAggregates {
+   constructor() {
    }
 
    matchProjectAgg(matchObj) {
