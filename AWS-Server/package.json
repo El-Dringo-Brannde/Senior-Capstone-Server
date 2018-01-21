@@ -16,6 +16,7 @@
       "express": "^4.16.2",
       "mocha": "^4.0.1",
       "mongodb": "^3.0.0-rc0",
-      "socket.io": "^2.0.4"
+      "socket.io": "^2.0.4",
+      "socket.io-emitter": "^3.1.1"
    }
 }
