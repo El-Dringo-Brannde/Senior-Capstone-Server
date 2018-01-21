@@ -21,7 +21,7 @@ module.exports = function(mongo, socket) {
    router.get('/city/:city', async (req, res) => {
       let city = req.params.city
       let grouping = req.query.group
-      let data = await sales.allByCity(city, group);
+      let data = await sales.cityGroupBy(city, grouping);
       res.json({
          data: data
       });
@@ -32,9 +32,9 @@ module.exports = function(mongo, socket) {
     * query: group = brand | color_name
     */
    router.get('/state/:state', async (req, res) => {
-      let city = req.params.state
+      let state = req.params.state
       let grouping = req.query.group
-      let data = await sales.allByState(city, grouping);
+      let data = await sales.stateGroupBy(state, grouping);
       res.json({
          data: data
       });

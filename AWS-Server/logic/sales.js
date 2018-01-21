@@ -14,20 +14,37 @@ module.exports = class sales extends mongo {
       return;
    }
 
-   async allByCity(city) {
-      let matchObj = {
-         city: city
+   async cityGroupBy(city, grouping) {
+      let barObj = {}, pieObj = {};
+
+      let pieAgg = this.aggregateBuilder.cityPieGroupBy(city, grouping)
+      let pieRes = await this.aggregate(pieAgg)
+      pieObj = this.utility.arrayToObject(pieRes)
+
+      let barAgg = this.aggregateBuilder.cityBarGroupBy(city, grouping)
+      let barRes = await this.aggregate(barAgg);
+      barObj = this.utility.pullGroupToObjectKey(barRes)
+
+      return {
+         pieChart: pieObj,
+         barChart: barObj
       }
-      let agg = this.aggregateBuilder.matchProjectAgg(matchObj)
-      return await this.aggregate(agg)
    }
 
-   async allByState(state) {
-      let matchObj = {
-         state: state
+   async stateGroupBy(state, grouping) {
+      let barObj = {}, pieObj = {};
+      let pieAgg = this.aggregateBuilder.statePieGroupBy(state, grouping)
+      let pieRes = await this.aggregate(pieAgg)
+      pieObj = this.utility.arrayToObject(pieRes)
+
+      let barAgg = this.aggregateBuilder.stateBarGroupBy(state, grouping)
+      let barRes = await this.aggregate(barAgg)
+      barObj = this.utility.pullGroupToObjectKey(barRes)
+
+      return {
+         pieChart: pieObj,
+         barChart: barObj
       }
-      let agg = this.aggregateBuilder.matchProjectAgg(matchObj)
-      return await this.aggregate(agg)
    }
 
    async allByCityState(city, state, sessionID) {
