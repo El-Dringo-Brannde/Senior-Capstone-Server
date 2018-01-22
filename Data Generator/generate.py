@@ -130,7 +130,7 @@ def gen_sale(dealer_index):
         "name": name,
         "age": random.randint(18, 60),
         "license": license,
-        "color_name": color,
+        "color": color,
         "brand": brand,
         "dealer_id": dealer_id,
         "price": price,

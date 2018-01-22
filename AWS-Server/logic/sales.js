@@ -25,6 +25,8 @@ module.exports = class sales extends mongo {
       let barRes = await this.aggregate(barAgg);
       barObj = this.utility.pullGroupToObjectKey(barRes)
 
+      this.socketIO.socket.emit('Bar_Chart', barObj)
+      this.socketIO.socket.emit('Pie_Chart', pieObj)
       return {
          pieChart: pieObj,
          barChart: barObj
@@ -41,34 +43,14 @@ module.exports = class sales extends mongo {
       let barRes = await this.aggregate(barAgg)
       barObj = this.utility.pullGroupToObjectKey(barRes)
 
+
+      this.socketIO.socket.emit('Bar_Chart', barObj)
+      this.socketIO.socket.emit('Pie_Chart', pieObj)
       return {
          pieChart: pieObj,
          barChart: barObj
       }
    }
-
-   async allByCityState(city, state, sessionID) {
-      let matchObj = { city: city, state: state }
-      let returnObj = {};
-
-      this.socketIO.newRoom(sessionID);
-
-      let brands = await this.read(matchObj);
-      brands = brands[0].brands;
-
-      let agg1 = this.aggregateBuilder.matchProjectAgg(matchObj);
-      returnObj.totalSales = await this.aggregate(agg1);
-      returnObj.totalSales = returnObj.totalSales[0]
-
-      for (let brand of brands) {
-         let agg = this.aggregateBuilder.cityStateByBrand(city, state, brand);
-         returnObj[brand] = await this.aggregate(agg)
-         returnObj[brand] = returnObj[brand][0]
-      }
-      return returnObj
-   } // ghetto way of doing math NOT in mongoDB
-
-
 
    async cityStateGroupBy(city, state, group) {
       let pieObject = {}, barObject = {};

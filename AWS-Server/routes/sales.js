@@ -7,13 +7,6 @@ module.exports = function(mongo, socket) {
 
    router.use((req, res, next) => next()); // init
 
-   router.get('/session', async (req, res) => {
-      let sessionID = req.query.session;
-      let session = await sales.newSession(sessionID);
-
-      res.sendStatus(200);
-   });
-
    /**
     * [GET] city data with a grouping filter
     *  query: group = brand | color_name

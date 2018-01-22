@@ -18,7 +18,10 @@ module.exports = class events {
     * Called when the user ends the session.
     * Is not called when the skill returns shouldEndSession=true.
     */
-   onSessionEnded(sessionEndedRequest, session) { }
+   onSessionEnded(sessionEndedRequest, session) {
+      console.log(sessionEndedRequest, session)
+      // this.startStop.handleSessionEndRequest(callback)
+   }
 
 
    /**

@@ -1,6 +1,6 @@
 module.exports = class baseRoutes {
    constructor() {
-      this.serverURL = 'http://34.215.212.179:3105/';
+      this.serverURL = 'http://35.169.224.183:3105/';
       this.sessionAttributes = {};
 
       this.buildResponse = require('./../buildResponse');
@@ -15,26 +15,18 @@ module.exports = class baseRoutes {
 
    buildQueryString(intentSlots) {
       var route = '';
-      var query = '';
-      console.log(intentSlots)
+      var query = intentSlots.type.value + '/';
+      delete intentSlots.type
 
-      if (intentSlots.Type && intentSlots.Type.value) {
-         route = intentSlots.Type.value + '/'
-         delete intentSlots.Type
+      for (var i in intentSlots) {
+         let cur = intentSlots[i];
+         if (cur.value && cur.name != 'group')
+            query += cur.name.toLowerCase() + '/' + cur.value.toLowerCase() + '/'
+         if (cur.value && cur.name == 'group')
+            query += '?' + cur.name.toLowerCase() + '=' + cur.value.toLowerCase() + '&';
       }
-      if (intentSlots.Selector && intentSlots.Selector.value) {
-         query += intentSlots.Selector.value;
-         delete intentSlots.Selector
-      }
-
-      query += '?'
-      for (var i in intentSlots)
-         if (intentSlots[i].value && intentSlots[i].name){
-           route += intentSlots[i].name + '/'
-           query += intentSlots[i].name + '=' + intentSlots[i].value.toLowerCase() + '&'
-          }
-      console.log(route.slice(0, -1) + query.slice(0, -1));
-      return route.slice(0, -1) + query;
+      console.log(query)
+      return query;
    }
 
    sendBackReturnedData(intentName, data, callback) {
@@ -46,23 +38,19 @@ module.exports = class baseRoutes {
 
    parseRoute(intent, sessionID, callback) {
       const intentName = intent.name;
-      var strippedID = sessionID.split(".");
-      const sessionQuery = 'session=' + strippedID[1].toLowerCase();
+      let route = this.buildQueryString(intent.slots)
+      let sessionQuery = 'sessionID' + '=' + sessionID
+      console.log("Done with intent", sessionQuery);
+      this.sendRequest(route, sessionQuery, intentName, callback)
 
-      if (Object.keys(intent.slots).length == 1)
-         this.sendRequest(routeVal.toLowerCase(), sessionQuery, intentName, callback)
-      else {
-         let route = this.buildQueryString(intent.slots)
-         console.log("Done with intent");
-         this.sendRequest(route, sessionQuery, intentName, callback)
-      }
    }
 
    sendRequest(route, sessionQuery, intentName, callback) {
-     console.log("session" + sessionQuery);
+      console.log(this.serverURL + route.toLowerCase() + sessionQuery);
+
       this.rp(this.serverURL + route.toLowerCase() + sessionQuery)
          .then(resp => this.sendBackReturnedData(intentName, resp, callback))
-         .catch(err => this.handleErr(err, callback));
+         .catch(err => { this.handleErr(err, callback) });
    }
 
    logRoute() { } // implement logic to log route here
