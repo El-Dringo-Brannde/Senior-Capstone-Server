@@ -7,8 +7,8 @@ class paramVal {
     // Test for Express-validator
     validateStateCity(state, city) {
         router.get('/test_validator', (req, response, next) => {
-            req.checkQuery('state', '"State" can not be empty and must be a string').isNotEmpty();
-            req.checkQuery('city', '"City" not be empty').isNotEmpty();
+            req.checkQuery('state', '"State" can not be empty and must be a string').notEmpty().isString();
+            req.checkQuery('city', '"City" not be empty').notEmpty().isString();
             req.getValidationResult().then((validationResult) => {
                 if (!validationResult.isEmpty()) {
                     response.json({
