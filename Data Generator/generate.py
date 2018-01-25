@@ -4,6 +4,7 @@ from pymongo import MongoClient  # pip install PyMongo
 from faker import Faker  # pip install Faker
 from datetime import date
 from datetime import datetime
+import numpy as np
 
 # setup mongodb connection
 #client = MongoClient()
@@ -95,14 +96,37 @@ def build_dealers():
                         if (avail_brands.count(avail_brands[m]) > 1):
                             avail_brands.remove(avail_brands[m])
 
+				# shift the dealership a small distance away from the city center
+				
+				# lat/long change by distance changes depending on circumference of earth
+				# at the current lat, so calculate it
+				r_earth = 40074
+				cir_earth = r_earth * cos(locations["loc"]["lat"])
+				
+				# lat/long calcs use KM, store the conversion factor for going between KM and Miles
+				converstion_factor = 0.62137119
+				
+				# generate a random number from a standard distribution
+				# center around 0, standard dev of 5
+				# 68% within 5 miles of center
+				# 95% within 10
+				# 99.7% within 15
+				# 0.3% greater than 15 from city center
+				# then convert to KM for the shift
+				shift_lat = np.random.normal(0, 5.0, 1) / converstion_factor
+				shift_long = np.random.normal(0, 5.0, 1) / converstion_factor
+				
+				lat = (((locations["loc"]["lat"] + shift_lat)/40,075) * 360)
+				long = (((locations["loc"]["long"] + shift_long)/40,075) * 360)
+							
                 # add the dealer
                 dealers.append({
                     "id": 0,
                     "state": avail_states[i][0],
                     "city": locations[loc]["city"],
                     "zip": locations[loc]["zip"],
-                    "lat": locations[loc]["lat"],
-                    "long": locations[loc]["long"],
+                    "lat": lat,
+                    "long": long,
                     "county": locations[loc]["county"],
                     "brands": avail_brands,
                     "ytd": 0,
