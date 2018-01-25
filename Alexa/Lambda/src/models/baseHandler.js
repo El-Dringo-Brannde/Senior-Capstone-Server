@@ -21,8 +21,7 @@ module.exports = class baseHandler {
    intentRequest() {
       var self = this;
       this.intentEvents.onIntent(this.event.request,
-         this.event.session.sessionId,
-         this.intentEvents.session,
+         this.event.session.user.userId, // send user's userID to verify uniqueness
          function callback(sessionAttributes, speechletResponse) {
             self.context.succeed(self.buildResponse(sessionAttributes, speechletResponse));
          });
@@ -30,13 +29,10 @@ module.exports = class baseHandler {
 
    launchRequest() {
       var self = this;
-      var sessionID = this.event.session.sessionId;
-
       this.intentEvents.onLaunch(
          function callback(sessionAttributes, speechletResponse) {
             self.context.succeed(self.buildResponse(sessionAttributes, speechletResponse));
-         }, sessionID
-      );
+         });
    }
 
    sessionEndedRequest() {
