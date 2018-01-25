@@ -11,6 +11,10 @@ module.exports = class startStop {
       this.repromptText = "How can I help you?";
 
       this.buildResponse = buildResponse;
+
+      this.serverURL = 'http://35.169.224.183:3105/';
+
+      this.rp = require('request-promise');
    }
 
    handleSessionEndRequest(callback) {
@@ -19,12 +23,21 @@ module.exports = class startStop {
          this.buildResponse(this.endTitle, this.exitOutput, null, this.endSessionEnd));
    }
 
-   getWelcomeResponse(callback) {
-      // If we wanted to initialize the session to have some attributes we could add those here.
-      // If the user either does not reply to the welcome message or says something that is not
-      // understood, they will be prompted again with this text.
-      callback({},
-         this.buildResponse(this.welcomeTitle, this.welcomeOutput,
-            this.repromptText, this.welcomeSessionEnd));
+   getWelcomeResponse(callback, sessionID) {
+      console.log("session id " + sessionID);
+
+      let requestOptions = {
+         method: 'POST',
+         uri: this.serverURL + 'session/create',
+         body: {
+            sessionID: sessionID
+         },
+         json: true
+      }
+
+      this.rp(requestOptions)
+         .then(resp => callback({},
+            this.buildResponse(this.welcomeTitle, this.welcomeOutput, this.repromptText, this.welcomeSessionEnd)))
+         .catch(err => this.handleErr(err, callback));
    }
 }

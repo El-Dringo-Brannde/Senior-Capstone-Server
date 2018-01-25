@@ -5,7 +5,7 @@ module.exports = class routes extends baseRoute {
       super();
    }
 
-   goToRoute(intent, callback) {
-      this.parseRoute(intent, callback);
+   goToRoute(intent, userID, callback) {
+      this.parseRoute(intent, userID, callback);
    }
 }

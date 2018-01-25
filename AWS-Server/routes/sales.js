@@ -6,48 +6,52 @@ let util = require('util');
 
 
 // All routes here are prefixed by the /sales route
-module.exports = function (mongo, socket) {
-    sales = new sales(mongo, 'sales', socket);
+module.exports = function(mongo, socket) {
+   sales = new sales(mongo, 'sales', socket);
 
     router.use((req, res, next) => next()); // init
 
-    // [GET] total sales for city/state
-    router.get('/city/state', async (req, res) => {
-        let city = req.params.city
-        let state = req.params.state;
-        let data = await sales.allByCityState(city, state);
-        res.json({
-            data: data
-        });
-    });
+   /**
+    * [GET] city data with a grouping filter
+    *  query: group = brand | color_name, userID  = STRING
+    */
+   router.get('/city/:city', async (req, res) => {
+      let city = req.params.city
+      let grouping = req.query.group
+      let user = req.query.userID
+      let data = await sales.cityGroupBy(city, grouping, user);
+      res.json({
+         data: data
+      });
+   });
 
-    router.get('/city', async (req, res) => {
-        let city = req.query.city
-        let data = await sales.allByCity(city);
-        res.json({
-            data: data
-        });
-    });
+   /**
+    * [GET] state data with a grouping filter
+    * query: group = brand | color_name, userID = STRING
+    */
+   router.get('/state/:state', async (req, res) => {
+      let state = req.params.state
+      let grouping = req.query.group
+      let user = req.query.userID;
+      let data = await sales.stateGroupBy(state, grouping, user);
+      res.json({
+         data: data
+      });
+   });
 
-    router.get('/state', async (req, res) => {
-        let city = req.query.state
-        let data = await sales.allByState(city);
-        res.json({
-            data: data
-        });
-    });
+   // [GET] city state data with a grouping filter
+   // query: group = brand \ color_name, userID = STRING
+   router.get('/city/:city/state/:state', async (req, res) => {
+      let city = req.params.city;
+      let state = req.params.state;
+      let group = req.query.group;
+      let user = req.query.userID;
 
-    // [GET] breakdown by brand followed by query params
-    // query: state=California&city=Oakland&brand=eagle
-    router.get('/brand', async (req, res) => {
-        let city = req.query.city;
-        let state = req.query.state;
-        let brand = req.query.brand;
-        let data = await sales.cityStateBrand(city, state, brand);
-        res.json({
-            data: data
-        })
-    });
+      let data = await sales.cityStateGroupBy(city, state, group, user);
+      res.json({
+         data: data
+      })
+   });
 
     // Test for Express-validator
     router.get('/test_validator', (req, response, next) => {

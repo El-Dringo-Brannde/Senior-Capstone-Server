@@ -69,7 +69,7 @@ def load_cities():
     # set the final state end index
     avail_states[-1][2] = len(locations) - 1
 
-  return
+    return
 
 
 def build_dealers():
@@ -82,18 +82,18 @@ def build_dealers():
                 #get a random city from locations
                 loc = random.randrange(avail_states[i][1], avail_states[i][2])
 
-        # pick a random set of brands to sell
-        avail_brands = []
-        brand_count = random.randrange(1, len(brands) + 1)
-        for l in range(brand_count):
-          avail_brands.append(
-              brands[random.randrange(0, len(brands))])
+                # pick a random set of brands to sell
+                avail_brands = []
+                brand_count = random.randrange(1, len(brands) + 1)
+                for l in range(brand_count):
+                    avail_brands.append(
+                        brands[random.randrange(0, len(brands))])
 
-        # remove duplicate brands
-        for m in range(len(avail_brands)):
-          if(len(avail_brands) > 1 and m < len(avail_brands)):
-            if (avail_brands.count(avail_brands[m]) > 1):
-              avail_brands.remove(avail_brands[m])
+                # remove duplicate brands
+                for m in range(len(avail_brands)):
+                    if(len(avail_brands) > 1 and m < len(avail_brands)):
+                        if (avail_brands.count(avail_brands[m]) > 1):
+                            avail_brands.remove(avail_brands[m])
 
                 # add the dealer
                 dealers.append({
@@ -109,18 +109,18 @@ def build_dealers():
                     "mtd": 0
                 })
 
-  # set the dealer ids
-  for i in range(len(dealers)):
-    dealers[i]["id"] = i + 1
+    # set the dealer ids
+    for i in range(len(dealers)):
+        dealers[i]["id"] = i + 1
 
-  return
+    return
 
 
 def gen_sale(dealer_index):
-  # get the given dealership information
-  city = dealers[dealer_index]["city"]
-  state = dealers[dealer_index]["state"]
-  dealer_id = dealers[dealer_index]["id"]
+    # get the given dealership information
+    city = dealers[dealer_index]["city"]
+    state = dealers[dealer_index]["state"]
+    dealer_id = dealers[dealer_index]["id"]
 
     # generate random information for the sale
     name = f.name()

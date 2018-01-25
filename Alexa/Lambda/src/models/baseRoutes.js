@@ -14,40 +14,43 @@ module.exports = class baseRoutes {
    }
 
    buildQueryString(intentSlots) {
-      var query = '';
-      for (var i in intentSlots)
-         if (intentSlots[i].value)
-            query += intentSlots[i].value + '/'
-      return query
+      var route = '';
+      var query = intentSlots.type.value + '/';
+      delete intentSlots.type
+
+      for (var i in intentSlots) {
+         let cur = intentSlots[i];
+         if (cur.value && cur.name != 'group')
+            query += cur.name.toLowerCase() + '/' + cur.value.toLowerCase() + '/'
+         if (cur.value && cur.name == 'group')
+            query += '?' + cur.name.toLowerCase() + '=' + cur.value.toLowerCase() + '&';
+      }
+      console.log(query)
+      return query;
    }
 
    sendBackReturnedData(intentName, data, callback) {
-      let speechOutput = "Ok, I went to the route. And I got " + JSON.parse(data).data;
+      let speechOutput = "Ok";
       let repromptText = "Ok, I'm trying again.";
       callback(this.sessionAttributes, this.buildResponse(intentName, speechOutput, repromptText, false));
    }
 
 
-   parseRoute(intent, callback) {
+   parseRoute(intent, userID, callback) {
       const intentName = intent.name;
-      const Route = intent.slots.Route;
+      let route = this.buildQueryString(intent.slots)
+      let sessionQuery = 'userID' + '=' + userID
+      console.log("Done with intent", sessionQuery);
+      this.sendRequest(route, sessionQuery, intentName, callback)
 
-      try {
-         var routeVal = Route.value;
-      } catch (err) { }
-
-      if (Object.keys(intent.slots).length == 1)
-         this.sendRequest(routeVal.toLowerCase(), intentName, callback)
-      else {
-         let route = this.buildQueryString(intent.slots)
-         this.sendRequest(route, intentName, callback)
-      }
    }
 
-   sendRequest(route, intentName, callback) {
-      this.rp(this.serverURL + route.toLowerCase())
+   sendRequest(route, sessionQuery, intentName, callback) {
+      console.log(this.serverURL + route.toLowerCase() + sessionQuery);
+
+      this.rp(this.serverURL + route.toLowerCase() + sessionQuery)
          .then(resp => this.sendBackReturnedData(intentName, resp, callback))
-         .catch(err => this.handleErr(err, callback));
+         .catch(err => { this.handleErr(err, callback) });
    }
 
    logRoute() { } // implement logic to log route here

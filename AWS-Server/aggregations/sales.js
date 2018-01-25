@@ -1,28 +1,111 @@
 let mongo = require('./../database/mongoDB');
 
-class salesAggregates extends mongo {
-   constructor(mongo, collName, socket) {
-      super(mongo, collName, socket);
+class salesAggregates {
+   constructor() {
    }
 
-   matchProjectAgg(matchObj) {
-      return [{
-         $match: matchObj
-      },
-      {
-         $project: {
-            totalSales: {
-               $sum: '$sales.price'
-            },
-            place: {
-               city: '$city',
-               state: '$state'
+   cityBarGroupBy(city, group) {
+      return [
+         {
+            $match: {
+               'city': city,
+            }
+         },
+         {
+            $unwind: '$sales'
+         },
+         {
+            $group: {
+               _id: {
+                  group: '$sales.' + group,
+                  month: {
+                     $month: '$sales.date'
+                  }
+               },
+               sales: {
+                  $sum: '$sales.price'
+               }
+            }
+         },
+         {
+            $sort: { _id: 1 }
+         },
+      ]
+   }
+
+   cityPieGroupBy(city, group) {
+      return [
+         {
+            $match: {
+               'city': city,
+            }
+         },
+         {
+            $unwind: '$sales'
+         },
+         {
+            $group: {
+               _id: '$sales.' + group,
+               sales: {
+                  $sum: '$sales.price'
+               }
             }
          }
-      }]
+      ]
    }
 
-   cityStateByBrand(city, state, brand) {
+   statePieGroupBy(state, group) {
+      return [
+         {
+            $match: {
+               'state': state,
+            }
+         },
+         {
+            $unwind: '$sales'
+         },
+         {
+            $group: {
+               _id: '$sales.' + group,
+               sales: {
+                  $sum: '$sales.price'
+               }
+            }
+         }
+      ]
+   }
+
+   stateBarGroupBy(state, group) {
+      return [
+         {
+            $match: {
+               'state': state,
+            }
+         },
+         {
+            $unwind: '$sales'
+         },
+         {
+            $group: {
+               _id: {
+                  group: '$sales.' + group,
+                  month: {
+                     $month: '$sales.date'
+                  }
+               },
+               sales: {
+                  $sum: '$sales.price'
+               }
+            }
+         },
+         {
+            $sort: { _id: 1 }
+         },
+      ]
+   }
+
+
+   cityStateBarGroupBy(city, state, group) {
       return [
          {
             $match: {
@@ -34,13 +117,38 @@ class salesAggregates extends mongo {
             $unwind: '$sales'
          },
          {
-            $match: {
-               'sales.brand': brand
+            $group: {
+               _id: {
+                  group: '$sales.' + group,
+                  month: {
+                     $month: '$sales.date'
+                  }
+               },
+               sales: {
+                  $sum: '$sales.price'
+               }
             }
          },
          {
+            $sort: { _id: 1 }
+         },
+      ]
+   }
+
+   cityStatePieGroupBy(city, state, group) {
+      return [
+         {
+            $match: {
+               'state': state,
+               'city': city,
+            }
+         },
+         {
+            $unwind: '$sales'
+         },
+         {
             $group: {
-               _id: brand + 'Sales',
+               _id: '$sales.' + group,
                sales: {
                   $sum: '$sales.price'
                }
