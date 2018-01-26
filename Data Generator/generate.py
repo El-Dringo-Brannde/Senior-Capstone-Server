@@ -34,6 +34,17 @@ dealers = []
 dealers_per_city = random.randint(2, 10)
 cities_per_state = random.randint(2, 10)
 
+cities_min = 1
+cities_max = 10
+
+dealerships_min = 1
+dealerships_max = 10
+
+start year = 2016
+end_year = 2017
+
+test_mode = false
+
 # load US cities from file
 
 
@@ -211,10 +222,45 @@ def build_sales():
 
     return
 
+def get_choice(type, accepted, message, default):
+	valid = false
+	entry = ''
+	if(type == 'string'):
+		while(!valid):
+			entry = raw_input(message)
+			if(entry in accepted):
+				return entry
+			elif(entry == ""):
+				return default
+			else:
+				print("Unrecognized entry, please try again")
+	elif(type == 'int'):
+		while(!valid):
+			entry = input(message)
+			if(accepted[0] <= entry <= accepted[1]):
+				return entry
+			elif(entry == ""):
+				return default
+			else:
+				print("Unrecognized entry, please try again")
+				
+def load_options():
+	prompt = "Use default settings: [y]/n"
+	if(get_choice("string", ["y","n"], prompt, "y") == "n"):
+		
+		#use range
+		#min cities
+		#cities per state
+		#use range
+		#min dealers per city
+		#dealerships per city
+		#beginning year
+		#end year
+		#test mode
+		
 
-# TODO allow definition of settings through prompts and/or CLI
-
-
+#setup run options
+load_options()
 # create a list of cities from the included file
 load_cities()
 # create some dealerships
