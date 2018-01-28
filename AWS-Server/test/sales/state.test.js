@@ -5,11 +5,11 @@ var assert = require('chai').assert;
 var colors = ['Blue', 'White', 'Black', 'Silver', 'Red']
 
 
-describe('city sales routes', function() {
+describe('State sales routes', function() {
 
    it('should get back an error regarding incorrect userID params', function(done) {
       request
-         .get('/sales/city/petaluma/?group=color')
+         .get('/sales/state/california/?group=color')
          .end(function(err, res) {
             assert.exists(res.body.error.userID)
             assert.equal(res.body.error.userID.msg, 'Invalid value')
@@ -20,7 +20,7 @@ describe('city sales routes', function() {
    it('should get data back from the request', function(done) {
       var userID = 'amzn1.ask.account.AHNWAHWU4XEGXMVIRTGD7E7K6FWMEYQEYXOKEJPEYRRB7HXPSRUAYSI27OITQKHXETSIQE4L7Y3YNHMIKJROBL24DJH3GJUNRXCS6QTMJKJL64DUIZ3LJWAU3GF2PLITSVW7VLXP2GJSMORRXXWAOWSTVCL6QE2UOASGKVCG3AMNN4CIQQQAXMPD3A2PPLQGTSLVPMHZONBKU3A'
       request
-         .get('/sales/city/petaluma?group=color&userID=' + userID)
+         .get('/sales/state/california/?group=color&userID=' + userID)
          .end(function(err, res) {
             let response = res.body.data;
             assert.exists(response.pieChart)
@@ -33,7 +33,7 @@ describe('city sales routes', function() {
    it('should get the correct data back from the pieChart request', function(done) {
       var userID = 'amzn1.ask.account.AHNWAHWU4XEGXMVIRTGD7E7K6FWMEYQEYXOKEJPEYRRB7HXPSRUAYSI27OITQKHXETSIQE4L7Y3YNHMIKJROBL24DJH3GJUNRXCS6QTMJKJL64DUIZ3LJWAU3GF2PLITSVW7VLXP2GJSMORRXXWAOWSTVCL6QE2UOASGKVCG3AMNN4CIQQQAXMPD3A2PPLQGTSLVPMHZONBKU3A'
       request
-         .get('/sales/city/petaluma/?group=color&userID=' + userID)
+         .get('/sales/state/california/?group=color&userID=' + userID)
          .end(function(err, res) {
             let response = res.body.data;
             assert.includeMembers(colors, Object.keys(response.pieChart))
@@ -47,7 +47,7 @@ describe('city sales routes', function() {
    it('should get the correct data back from the barChart request', function(done) {
       var userID = 'amzn1.ask.account.AHNWAHWU4XEGXMVIRTGD7E7K6FWMEYQEYXOKEJPEYRRB7HXPSRUAYSI27OITQKHXETSIQE4L7Y3YNHMIKJROBL24DJH3GJUNRXCS6QTMJKJL64DUIZ3LJWAU3GF2PLITSVW7VLXP2GJSMORRXXWAOWSTVCL6QE2UOASGKVCG3AMNN4CIQQQAXMPD3A2PPLQGTSLVPMHZONBKU3A'
       request
-         .get('/sales/city/petaluma?group=color&userID=' + userID)
+         .get('/sales/state/california/?group=color&userID=' + userID)
          .end(function(err, res) {
             let response = res.body.data;
             let barChartKeys = Object.keys(response.barChart);
