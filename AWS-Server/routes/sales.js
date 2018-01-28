@@ -1,4 +1,5 @@
 var router = require('express').Router();
+var expressValidator = require('express-validator');
 var sales = require('./../logic/sales');
 let util = require('util');
 var { check, validationResult } = require('express-validator/check');
@@ -8,7 +9,7 @@ var { check, validationResult } = require('express-validator/check');
 module.exports = function(mongo, socket) {
    sales = new sales(mongo, 'sales', socket);
 
-   router.use((req, res, next) => next()); // init
+    router.use((req, res, next) => next()); // init
 
    /**
     * [GET] city data with a grouping filter

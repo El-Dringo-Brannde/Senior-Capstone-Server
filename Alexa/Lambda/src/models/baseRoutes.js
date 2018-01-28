@@ -30,16 +30,16 @@ module.exports = class baseRoutes {
    }
 
    sendBackReturnedData(intentName, data, callback) {
-      let speechOutput = "Ok, I went to the route. And I got ";// + JSON.parse(data).data;
+      let speechOutput = "Ok";
       let repromptText = "Ok, I'm trying again.";
       callback(this.sessionAttributes, this.buildResponse(intentName, speechOutput, repromptText, false));
    }
 
 
-   parseRoute(intent, sessionID, callback) {
+   parseRoute(intent, userID, callback) {
       const intentName = intent.name;
       let route = this.buildQueryString(intent.slots)
-      let sessionQuery = 'sessionID' + '=' + sessionID
+      let sessionQuery = 'userID' + '=' + userID
       console.log("Done with intent", sessionQuery);
       this.sendRequest(route, sessionQuery, intentName, callback)
 

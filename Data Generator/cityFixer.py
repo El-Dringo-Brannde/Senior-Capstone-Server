@@ -1,6 +1,6 @@
 import csv
-reader = csv.reader(open('cities.csv', 'r'))
-writer = csv.writer(open('outfile.csv', 'w'))
+reader = csv.reader(open('locations.csv', 'r'))
+writer = csv.writer(open('locationsLong.csv', 'w'))
 
 states = {
     'AK': 'Alaska',
@@ -63,7 +63,9 @@ states = {
 }
 
 for row in reader:
-  try:
-    writer.writerow([row[0], states[row[1]]])
-  except KeyError:
-    print("Ruh oh", KeyError)
+    try:
+        writer.writerow(
+            [row[0], row[1], row[2], row[3], states[row[4]], row[5]])
+    except KeyError:
+        print(row)
+        print("Ruh oh", KeyError)

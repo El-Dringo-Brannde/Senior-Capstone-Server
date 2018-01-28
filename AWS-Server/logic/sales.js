@@ -11,12 +11,7 @@ module.exports = class sales extends mongo {
       this.validation = validation;
    }
 
-   async newSession(sessionID) {
-      this.socketIO.newRoom(sessionID);
-      return;
-   }
-
-   async cityGroupBy(city, grouping) {
+   async cityGroupBy(city, grouping, user) {
       let barObj = {}, pieObj = {};
 
       let pieAgg = this.aggregateBuilder.cityPieGroupBy(city, grouping)
@@ -27,15 +22,24 @@ module.exports = class sales extends mongo {
       let barRes = await this.aggregate(barAgg);
       barObj = this.utility.pullGroupToObjectKey(barRes)
 
-      this.socketIO.socket.emit('Bar_Chart', barObj)
-      this.socketIO.socket.emit('Pie_Chart', pieObj)
+      this.socketIO.socket.emit('Bar_Chart', {
+         data: barObj,
+         user: user
+      })
+
+      this.socketIO.socket.emit('Pie_Chart', {
+         data: pieObj,
+         user: user
+      })
+
       return {
          pieChart: pieObj,
-         barChart: barObj
+         barChart: barObj,
+         user: user
       }
    }
 
-   async stateGroupBy(state, grouping) {
+   async stateGroupBy(state, grouping, user) {
       let barObj = {}, pieObj = {};
       let pieAgg = this.aggregateBuilder.statePieGroupBy(state, grouping)
       let pieRes = await this.aggregate(pieAgg)
@@ -46,15 +50,24 @@ module.exports = class sales extends mongo {
       barObj = this.utility.pullGroupToObjectKey(barRes)
 
 
-      this.socketIO.socket.emit('Bar_Chart', barObj)
-      this.socketIO.socket.emit('Pie_Chart', pieObj)
+      this.socketIO.socket.emit('Bar_Chart', {
+         data: barObj,
+         user: user
+      })
+
+      this.socketIO.socket.emit('Pie_Chart', {
+         data: pieObj,
+         user: user
+      })
+
       return {
          pieChart: pieObj,
-         barChart: barObj
+         barChart: barObj,
+         user: user
       }
    }
 
-   async cityStateGroupBy(city, state, group) {
+   async cityStateGroupBy(city, state, group, user) {
       let pieObject = {}, barObject = {};
 
       let pieAgg = this.aggregateBuilder.cityStatePieGroupBy(city, state, group);
@@ -65,11 +78,19 @@ module.exports = class sales extends mongo {
       barObject = await this.aggregate(barAgg);
       barObject = this.utility.pullGroupToObjectKey(barObject);
 
-      this.socketIO.socket.emit('Bar_Chart', barObject)
-      this.socketIO.socket.emit('Pie_Chart', pieObject)
+      this.socketIO.socket.emit('Bar_Chart', {
+         data: barObject,
+         user: user
+      })
+
+      this.socketIO.socket.emit('Pie_Chart', {
+         data: pieObject,
+         user: user
+      })
       return {
          pieChart: pieObject,
-         barChart: barObject
+         barChart: barObject,
+         user: user
       } // ghetto way of doing math NOT in mongoDB
    }
 }
