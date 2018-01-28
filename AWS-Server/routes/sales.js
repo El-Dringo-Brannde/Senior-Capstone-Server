@@ -2,7 +2,7 @@ var router = require('express').Router();
 var expressValidator = require('express-validator');
 var sales = require('./../logic/sales');
 let util = require('util');
-
+var { check, validationResult } = require('express-validator/check');
 
 
 // All routes here are prefixed by the /sales route
@@ -15,10 +15,13 @@ module.exports = function(mongo, socket) {
     * [GET] city data with a grouping filter
     *  query: group = brand | color_name, userID  = STRING
     */
-   router.get('/city/:city', async (req, res) => {
+   router.get('/city/:city', sales.validation.city(), async (req, res) => {
+      sales.validation.checkResult(req, res)
+
       let city = req.params.city
       let grouping = req.query.group
       let user = req.query.userID
+
       let data = await sales.cityGroupBy(city, grouping, user);
       res.json({
          data: data
@@ -29,7 +32,9 @@ module.exports = function(mongo, socket) {
     * [GET] state data with a grouping filter
     * query: group = brand | color_name, userID = STRING
     */
-   router.get('/state/:state', async (req, res) => {
+   router.get('/state/:state', sales.validation.state(), async (req, res) => {
+      sales.validation.checkResult(req, res);
+
       let state = req.params.state
       let grouping = req.query.group
       let user = req.query.userID;
@@ -41,7 +46,9 @@ module.exports = function(mongo, socket) {
 
    // [GET] city state data with a grouping filter
    // query: group = brand \ color_name, userID = STRING
-   router.get('/city/:city/state/:state', async (req, res) => {
+   router.get('/city/:city/state/:state', sales.validation.cityState(), async (req, res) => {
+      sales.validation.checkResult(req, res);
+
       let city = req.params.city;
       let state = req.params.state;
       let group = req.query.group;
@@ -52,27 +59,5 @@ module.exports = function(mongo, socket) {
          data: data
       })
    });
-
-    // Test for Express-validator
-    router.get('/test_validator', (req, response, next) => {
-        req.checkQuery('state', '"State" can not be empty and must be a string').isNotEmpty();
-        req.checkQuery('city', '"City" not be empty').isNotEmpty();
-        req.getValidationResult().then((validationResult) => {
-            if(!validationResult.isEmpty()) {
-                response.json({
-                    result: "failed",
-                    message: `Validation errors: ${util.inspect(validationResult.array())}`
-                });
-                return;
-            }
-            //otherwise show
-            response.json({
-                result: "ok",
-                messsage: `Validate input successfully. Input params = ${util.inspect(request.query)}`
-            });
-        });
-    });
-
-
-    return router;
+   return router;
 };

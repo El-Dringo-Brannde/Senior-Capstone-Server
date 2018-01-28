@@ -1,12 +1,14 @@
 let salesAgg = require('./../aggregations/sales');
 let mongo = require('./../database/mongoDB');
 let salesUtility = require('./../utility/sales');
+let validation = require('./../paramValidation/sales');
 
 module.exports = class sales extends mongo {
    constructor(mongo, collName, socket) {
       super(mongo, collName, socket);
       this.aggregateBuilder = new salesAgg(mongo, collName, socket);
-      this.utility = salesUtility
+      this.utility = salesUtility;
+      this.validation = validation;
    }
 
    async cityGroupBy(city, grouping, user) {
