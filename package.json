@@ -4,7 +4,7 @@
    "description": "A home for all server related things",
    "main": "index.js",
    "scripts": {
-      "test": "mocha AWS-Server/test/*.js"
+      "test": "mocha AWS-Server/test/**/*.js"
    },
    "repository": {
       "type": "git",

@@ -1,15 +1,12 @@
 var request = require('supertest');
-request = request('http://34.215.212.179:3105');
+request = request('http://35.169.224.183:3105');
 var assert = require('chai').assert;
 
-
-
-describe('basic server testing', function() {
-
+describe('sales testing route', function() {
    it('should get back hello world', function(done) {
       request
          .get('/test')
-         .end(function(err, res) {
+         .end((err, res) => {
             assert.equal(res.body.data, "You did the thing!!!");
             done();
          });
