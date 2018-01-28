@@ -1,5 +1,9 @@
 var router = require('express').Router();
+var expressValidator = require('express-validator');
 var sales = require('./../logic/sales');
+let util = require('util');
+
+
 
 // All routes here are prefixed by the /sales route
 module.exports = function(mongo, socket) {
@@ -9,12 +13,13 @@ module.exports = function(mongo, socket) {
 
     /**
      * [GET] city data with a grouping filter
-     *  query: group = brand | color_name
+     *  query: group = brand | color_name, userID  = STRING
      */
     router.get('/city/:city', async (req, res) => {
         let city = req.params.city
         let grouping = req.query.group
-        let data = await sales.cityGroupBy(city, grouping);
+        let user = req.query.userID
+        let data = await sales.cityGroupBy(city, grouping, user);
         res.json({
             data: data
         });
@@ -22,30 +27,30 @@ module.exports = function(mongo, socket) {
 
     /**
      * [GET] state data with a grouping filter
-     * query: group = brand | color_name
+     * query: group = brand | color_name, userID = STRING
      */
     router.get('/state/:state', async (req, res) => {
         let state = req.params.state
         let grouping = req.query.group
-        let data = await sales.stateGroupBy(state, grouping);
+        let user = req.query.userID;
+        let data = await sales.stateGroupBy(state, grouping, user);
         res.json({
             data: data
         });
     });
 
     // [GET] city state data with a grouping filter
-    // query: group = brand \ color_name
+    // query: group = brand \ color_name, userID = STRING
     router.get('/city/:city/state/:state', async (req, res) => {
         let city = req.params.city;
         let state = req.params.state;
         let group = req.query.group;
+        let user = req.query.userID;
 
-        let data = await sales.cityStateGroupBy(city, state, group);
-
+        let data = await sales.cityStateGroupBy(city, state, group, user);
         res.json({
             data: data
         })
     });
-
     return router;
 };
