@@ -5,11 +5,11 @@ module.exports = class logger extends mongoDB {
       super(mongoDB, collName, null)
    }
 
-   logRoute(req, userID) {
+   async logRoute(req, userID) {
       let insertObj = { userID: userID };
       _.isEmpty(req.body) ? null : insertObj.body = req.body;
       _.isEmpty(req.params) ? null : insertObj.params = req.params;
       _.isEmpty(req.query) ? null : insertObj.query = req.query;
-      this.insert(insertObj)
+      return await this.insert(insertObj)
    }
 }
