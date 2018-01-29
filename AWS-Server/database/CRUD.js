@@ -11,6 +11,14 @@ module.exports = class CRUD {
 
    onInit() { } // virtual func
 
+   async update(selector, updateData) {
+      return await this.db.update(selector, { $set: updateData }, { upsert: true })
+   }
+
+   async insert(data) {
+      return await this.db.insertOne(data)
+   }
+
    async read(query) {
       return await this.db.find(query).toArray();
    }
