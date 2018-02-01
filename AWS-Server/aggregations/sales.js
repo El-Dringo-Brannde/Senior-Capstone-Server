@@ -1,5 +1,3 @@
-let mongo = require('./../database/mongoDB');
-
 class salesAggregates {
    constructor() {
    }

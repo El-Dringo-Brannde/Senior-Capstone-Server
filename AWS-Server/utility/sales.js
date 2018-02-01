@@ -42,6 +42,27 @@ class salesUtility {
       }
       return newObj
    }
+
+   findHighestNumbers(data) {
+      let highest = 0, group = '';
+      for (var i in data.pieChart)
+         if (data.pieChart[i] > highest) {
+            highest = data.pieChart[i]
+            group = i
+         }
+      return [group, highest]
+   }
+
+   findLowestNumbers(data) {
+      let lowest = Math.pow(10, 100), group = '';
+      for (var i in data.pieChart)
+         if (data.pieChart[i] < lowest) {
+            lowest = data.pieChart[i]
+            group = i
+         }
+      return [group, lowest]
+
+   }
 }
 
 module.exports = new salesUtility();

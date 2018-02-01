@@ -25,13 +25,13 @@ module.exports = class baseRoutes {
          if (cur.value && cur.name == 'group')
             query += '?' + cur.name.toLowerCase() + '=' + cur.value.toLowerCase() + '&';
       }
-      console.log(query)
       return query;
    }
 
-   sendBackReturnedData(intentName, data, callback) {
-      let speechOutput = "Ok";
-      let repromptText = "Ok, I'm trying again.";
+   sendBackReturnedData(intentName, response, callback) {
+      response = JSON.parse(response);
+      let speechOutput = response.speechlet
+      let repromptText = "Oh noes, Something went wrong, please try again.";
       callback(this.sessionAttributes, this.buildResponse(intentName, speechOutput, repromptText, false));
    }
 
@@ -40,14 +40,11 @@ module.exports = class baseRoutes {
       const intentName = intent.name;
       let route = this.buildQueryString(intent.slots)
       let sessionQuery = 'userID' + '=' + userID
-      console.log("Done with intent", sessionQuery);
       this.sendRequest(route, sessionQuery, intentName, callback)
 
    }
 
    sendRequest(route, sessionQuery, intentName, callback) {
-      console.log(this.serverURL + route.toLowerCase() + sessionQuery);
-
       this.rp(this.serverURL + route.toLowerCase() + sessionQuery)
          .then(resp => this.sendBackReturnedData(intentName, resp, callback))
          .catch(err => { this.handleErr(err, callback) });

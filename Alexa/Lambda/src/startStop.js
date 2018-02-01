@@ -24,8 +24,6 @@ module.exports = class startStop {
    }
 
    getWelcomeResponse(callback, sessionID) {
-      console.log("session id " + sessionID);
-
       let requestOptions = {
          method: 'POST',
          uri: this.serverURL + 'session/create',
