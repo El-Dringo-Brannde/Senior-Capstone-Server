@@ -30,7 +30,6 @@ module.exports = class events {
    onIntent(intentRequest, userID, callback) {
       const intent = intentRequest.intent;
       const intentName = intentRequest.intent.name;
-      console.log(userID)
 
       // Dispatch to your skill's intent handlers
       if (intentName === 'Capstone')
