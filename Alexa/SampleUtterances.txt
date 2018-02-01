@@ -1,3 +1,0 @@
-Show me {Type} for {Which} in {Time}
-AMAZON.HelpIntent open
-AMAZON.StopIntent exit
