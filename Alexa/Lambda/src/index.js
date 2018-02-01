@@ -1,39 +1,28 @@
-'use strict';
-var events = require('./events')()
-
-// --------------- Helpers that build all of the responses -----------------------
-
-function buildResponse(sessionAttributes, speechletResponse) {
-   return {
-      version: '1.0',
-      sessionAttributes,
-      response: speechletResponse,
-   };
-}
-
+var baseHandler = require('./models/baseHandler');
 // --------------- Main handler -----------------------
+
 
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
 exports.handler = (event, context) => {
-   try {
-      if (event.request.type === 'LaunchRequest') {
-         onLaunch(event.request,
-            event.session,
-            function callback(sessionAttributes, speechletResponse) {
-               context.succeed(buildResponse(sessionAttributes, speechletResponse));
-            });
-      } else if (event.request.type === 'IntentRequest') {
-         events.onIntent(event.request,
-            event.session,
-            function callback(sessionAttributes, speechletResponse) {
-               context.succeed(buildResponse(sessionAttributes, speechletResponse));
-            });
-      } else if (event.request.type === 'SessionEndedRequest') {
-         onSessionEnded(event.request, event.session);
-         context.succeed();
-      }
-   } catch (e) {
-      context.fail("Exception: " + e);
-   }
+   new handler(event, context);
 };
+
+class handler extends baseHandler {
+   constructor(event, context) {
+      super(event, context);
+   }
+
+   onInit() {
+      this.parseIntent();
+   }
+
+   parseIntent() {
+      if (this.event.request.type === 'IntentRequest')
+         this.intentRequest();
+      else if (this.event.request.type == 'SessionEndedRequest')
+         this.sessionEndedRequest();
+      else if (this.event.request.type == 'LaunchRequest')
+         this.launchRequest();
+   }
+}

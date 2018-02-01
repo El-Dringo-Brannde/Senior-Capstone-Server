@@ -1,0 +1,8 @@
+Capstone Get {Type} for {Which} in {Time}
+Capstone Get {Type} by {Selector} in {City} {State}
+Capstone Show me {Type} for {Which} in {Time}
+Capstone Show me {Type} by {Selector} in {City} {State}
+Capstone Show me {Type} {Which}
+Capstone Show Me Test
+AMAZON.HelpIntent open
+AMAZON.StopIntent exit
