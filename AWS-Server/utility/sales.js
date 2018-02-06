@@ -63,6 +63,17 @@ class salesUtility {
       return [group, lowest]
 
    }
+
+   cleanBubbleObject(bubbleObject) {
+      return bubbleObject.map(el => {
+         return {
+            [el._id.month]: {
+               sales: el.sales,
+               count: el.count
+            }
+         }
+      })
+   }
 }
 
 module.exports = new salesUtility();

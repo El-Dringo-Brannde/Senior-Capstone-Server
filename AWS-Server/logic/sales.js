@@ -12,7 +12,7 @@ module.exports = class sales extends mongo {
    }
 
    async cityGroupBy(city, grouping, user) {
-      let barObj = {}, pieObj = {};
+      let barObj = {}, pieObj = {}, bubbleObject = {};
 
       let pieAgg = this.aggregateBuilder.cityPieGroupBy(city, grouping)
       let pieRes = await this.aggregate(pieAgg)
@@ -22,6 +22,15 @@ module.exports = class sales extends mongo {
       let barRes = await this.aggregate(barAgg);
       barObj = this.utility.pullGroupToObjectKey(barRes)
 
+      let bubbleAgg = this.aggregateBuilder.cityBubbleGroupBy(city, grouping)
+      bubbleObject = await this.aggregate(bubbleAgg)
+      bubbleObject = this.utility.cleanBubbleObject(bubbleObject)
+
+      this.socketIO.socket.emit('Bubble_Chart', {
+         data: bubbleObject,
+         user: user
+      })
+
       this.socketIO.socket.emit('Bar_Chart', {
          data: barObj,
          user: user
@@ -35,12 +44,13 @@ module.exports = class sales extends mongo {
       return {
          pieChart: pieObj,
          barChart: barObj,
+         bubbleChart: bubbleObject,
          user: user
       }
    }
 
    async stateGroupBy(state, grouping, user) {
-      let barObj = {}, pieObj = {};
+      let barObj = {}, pieObj = {}, bubbleObject = {};
       let pieAgg = this.aggregateBuilder.statePieGroupBy(state, grouping)
       let pieRes = await this.aggregate(pieAgg)
       pieObj = this.utility.arrayToObject(pieRes)
@@ -49,6 +59,10 @@ module.exports = class sales extends mongo {
       let barRes = await this.aggregate(barAgg)
       barObj = this.utility.pullGroupToObjectKey(barRes)
 
+      let bubbleAgg = this.aggregateBuilder.stateBubbleGroupBy(state, grouping)
+      bubbleObject = await this.aggregate(bubbleAgg)
+      bubbleObject = this.utility.cleanBubbleObject(bubbleObject)
+
 
       this.socketIO.socket.emit('Bar_Chart', {
          data: barObj,
@@ -60,15 +74,21 @@ module.exports = class sales extends mongo {
          user: user
       })
 
+      this.socketIO.socket.emit('Bubble_Chart', {
+         data: bubbleObject,
+         user: user
+      })
+
       return {
          pieChart: pieObj,
          barChart: barObj,
+         bubbleChart: bubbleObject,
          user: user
       }
    }
 
    async cityStateGroupBy(city, state, group, user) {
-      let pieObject = {}, barObject = {};
+      let pieObject = {}, barObject = {}, bubbleObject = {};
 
       let pieAgg = this.aggregateBuilder.cityStatePieGroupBy(city, state, group);
       pieObject = await this.aggregate(pieAgg)
@@ -77,6 +97,10 @@ module.exports = class sales extends mongo {
       let barAgg = this.aggregateBuilder.cityStateBarGroupBy(city, state, group)
       barObject = await this.aggregate(barAgg);
       barObject = this.utility.pullGroupToObjectKey(barObject);
+
+      let bubbleAgg = this.aggregateBuilder.cityStateBubbleGroupBy(city, state, group)
+      bubbleObject = await this.aggregate(bubbleAgg)
+      bubbleObject = this.utility.cleanBubbleObject(bubbleObject)
 
       this.socketIO.socket.emit('Bar_Chart', {
          data: barObject,
@@ -87,9 +111,15 @@ module.exports = class sales extends mongo {
          data: pieObject,
          user: user
       })
+
+      this.socketIO.socket.emit('Bubble_Chart', {
+         data: bubbleObject,
+         user: user
+      })
       return {
          pieChart: pieObject,
          barChart: barObject,
+         bubbleChart: bubbleObject,
          user: user
       } // ghetto way of doing math NOT in mongoDB
    }
