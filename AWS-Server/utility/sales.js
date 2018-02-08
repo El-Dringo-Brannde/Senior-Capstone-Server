@@ -43,6 +43,25 @@ class salesUtility {
       return newObj
    }
 
+   bubbleLineGroupToObjectKey(mongoArray) {
+      let newObj = {};
+      for (let i of mongoArray) {
+         let grouping = i._id.group
+         if (!newObj[grouping]) {
+            newObj[grouping] = [];
+            newObj[grouping].push({
+               sales: i.sales,
+               month: i._id.month
+            })
+         } else
+            newObj[grouping].push({
+               sales: i.sales,
+               month: i._id.month
+            })
+      }
+      return newObj
+   }
+
    findHighestNumbers(data) {
       let highest = 0, group = '';
       for (var i in data.pieChart)
