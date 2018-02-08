@@ -17,29 +17,20 @@ module.exports = class sales extends mongo {
       let pieAgg = this.aggregateBuilder.cityPieGroupBy(city, grouping)
       let pieRes = await this.aggregate(pieAgg)
       pieObj = this.utility.arrayToObject(pieRes)
+      pieObj.user = user;
 
       let barAgg = this.aggregateBuilder.cityBarGroupBy(city, grouping)
       let barRes = await this.aggregate(barAgg);
+      bubbleObject = JSON.parse(JSON.stringify(barRes)); // deep copy object
       barObj = this.utility.pullGroupToObjectKey(barRes)
+      barObj.user = user;
 
-      let bubbleAgg = this.aggregateBuilder.cityBubbleGroupBy(city, grouping)
-      bubbleObject = await this.aggregate(bubbleAgg)
-      bubbleObject = this.utility.cleanBubbleObject(bubbleObject)
+      bubbleObject = this.utility.bubbleLineGroupToObjectKey(bubbleObject);
+      bubbleObject.user = user;
 
-      this.socketIO.socket.emit('Bubble_Chart', {
-         data: bubbleObject,
-         user: user
-      })
-
-      this.socketIO.socket.emit('Bar_Chart', {
-         data: barObj,
-         user: user
-      })
-
-      this.socketIO.socket.emit('Pie_Chart', {
-         data: pieObj,
-         user: user
-      })
+      this.socketIO.socket.emit('Bubble_Chart', bubbleObject);
+      this.socketIO.socket.emit('Bar_Chart', barObj);
+      this.socketIO.socket.emit('Pie_Chart', pieObj);
 
       return {
          pieChart: pieObj,
@@ -51,33 +42,27 @@ module.exports = class sales extends mongo {
 
    async stateGroupBy(state, grouping, user) {
       let barObj = {}, pieObj = {}, bubbleObject = {};
+
       let pieAgg = this.aggregateBuilder.statePieGroupBy(state, grouping)
       let pieRes = await this.aggregate(pieAgg)
       pieObj = this.utility.arrayToObject(pieRes)
+      pieObj.user = user;
+
 
       let barAgg = this.aggregateBuilder.stateBarGroupBy(state, grouping)
       let barRes = await this.aggregate(barAgg)
+      bubbleObject = JSON.parse(JSON.stringify(barRes)); // deep copy object
       barObj = this.utility.pullGroupToObjectKey(barRes)
 
-      let bubbleAgg = this.aggregateBuilder.stateBubbleGroupBy(state, grouping)
-      bubbleObject = await this.aggregate(bubbleAgg)
-      bubbleObject = this.utility.cleanBubbleObject(bubbleObject)
+      barObj.user = user;
 
 
-      this.socketIO.socket.emit('Bar_Chart', {
-         data: barObj,
-         user: user
-      })
+      bubbleObject = this.utility.bubbleLineGroupToObjectKey(bubbleObject);
+      bubbleObject.user = user;
 
-      this.socketIO.socket.emit('Pie_Chart', {
-         data: pieObj,
-         user: user
-      })
-
-      this.socketIO.socket.emit('Bubble_Chart', {
-         data: bubbleObject,
-         user: user
-      })
+      this.socketIO.socket.emit('Bar_Chart', barObj);
+      this.socketIO.socket.emit('Pie_Chart', pieObj);
+      this.socketIO.socket.emit('Bubble_Chart', bubbleObject);
 
       return {
          pieChart: pieObj,
@@ -93,29 +78,22 @@ module.exports = class sales extends mongo {
       let pieAgg = this.aggregateBuilder.cityStatePieGroupBy(city, state, group);
       pieObject = await this.aggregate(pieAgg)
       pieObject = this.utility.arrayToObject(pieObject)
+      pieObject.user = user;
 
       let barAgg = this.aggregateBuilder.cityStateBarGroupBy(city, state, group)
       barObject = await this.aggregate(barAgg);
+      bubbleObject = JSON.parse(JSON.stringify(barObject)); // deep copy object
+
       barObject = this.utility.pullGroupToObjectKey(barObject);
+      barObject.user = user;
 
-      let bubbleAgg = this.aggregateBuilder.cityStateBubbleGroupBy(city, state, group)
-      bubbleObject = await this.aggregate(bubbleAgg)
-      bubbleObject = this.utility.cleanBubbleObject(bubbleObject)
+      bubbleObject = this.utility.bubbleLineGroupToObjectKey(bubbleObject);
+      bubbleObject.user = user;
 
-      this.socketIO.socket.emit('Bar_Chart', {
-         data: barObject,
-         user: user
-      })
+      this.socketIO.socket.emit('Bar_Chart', barObject);
+      this.socketIO.socket.emit('Pie_Chart', pieObject);
+      this.socketIO.socket.emit('Bubble_Chart', bubbleObject);
 
-      this.socketIO.socket.emit('Pie_Chart', {
-         data: pieObject,
-         user: user
-      })
-
-      this.socketIO.socket.emit('Bubble_Chart', {
-         data: bubbleObject,
-         user: user
-      })
       return {
          pieChart: pieObject,
          barChart: barObject,
