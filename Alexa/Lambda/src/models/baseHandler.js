@@ -21,7 +21,7 @@ module.exports = class baseHandler {
    intentRequest() {
       var self = this;
       this.intentEvents.onIntent(this.event.request,
-         this.event.session.user.userId, // send user's userID to verify uniqueness
+         this.event.context.System.user.userId,
          function callback(sessionAttributes, speechletResponse) {
             self.context.succeed(self.buildResponse(sessionAttributes, speechletResponse));
          });

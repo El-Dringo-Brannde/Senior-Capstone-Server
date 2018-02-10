@@ -20,9 +20,9 @@ module.exports = class baseRoutes {
 
       for (var i in intentSlots) {
          let cur = intentSlots[i];
-         if (cur.value && cur.name != 'group')
+         if (cur && cur.value && cur.name != 'group')
             query += cur.name.toLowerCase() + '/' + cur.value.toLowerCase() + '/'
-         if (cur.value && cur.name == 'group')
+         if (cur && cur.value && cur.name == 'group')
             query += '?' + cur.name.toLowerCase() + '=' + cur.value.toLowerCase() + '&';
       }
       return query;
