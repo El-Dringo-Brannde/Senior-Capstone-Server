@@ -28,6 +28,16 @@ make_model = {
 
 color_list = ["Red", "Silver", "White", "Blue", "Black"]
 
+fake_dealerships = [
+    'tall toms toys',
+    'big bobs buggy',
+    'crazy chris cars',
+    'jeffs junkers',
+    'hot harrys hatchbacks',
+    'chads clunkers',
+    'jims jalopys'
+]
+
 locations = []
 avail_states = []
 dealers = []
@@ -42,8 +52,6 @@ start_year = 2016
 end_year = 2017
 
 test_mode = False
-
-# load US cities from file
 
 
 def load_cities():
@@ -91,12 +99,16 @@ def build_dealers():
             # create the number of dealers in the city
             num_dealerships = random.randint(dealerships_min, dealerships_max)
             for k in range(num_dealerships):
+
                 # get a random city from locations
                 if(avail_states[i][1] == avail_states[i][2]):
                     avail_states[i][2]
                 else:
                     loc = random.randrange(
                         avail_states[i][1], avail_states[i][2])
+
+                lat = locations[loc]['lat']
+                lng = locations[loc]['long']
 
                 # pick a random set of brands to sell
                 avail_brands = []
@@ -111,34 +123,24 @@ def build_dealers():
                         if (avail_brands.count(avail_brands[m]) > 1):
                             avail_brands.remove(avail_brands[m])
 
-                # shift the dealership a small distance away from the city
-                # center
+                dealerships = []
+                for d in range(random.randrange(1, 4)):
+                    # shift the dealership a small distance away from the city
+                    # center
+                    if (d % 2 == 0):  # just for some extra randomness
+                        dealer_lat = float(lat) + (0.01 * d)
+                        dealer_lng = float(lng) + (0.01 * d)
+                    else:
+                        dealer_lat = float(lat) - (0.01 * d)
+                        dealer_lng = float(lng) - (0.01 * d)
 
-                # lat/long change by distance changes depending on circumference of earth
-                # at the current lat, so calculate it
-                r_earth = 40074
-                cir_earth = r_earth * math.cos(float(locations[loc]["lat"]))
+                    dealerships.append({
+                        'name': fake_dealerships[d],
+                        'lat': dealer_lat,
+                        'lng': dealer_lng
+                    })
 
-                # lat/long calcs use KM, store the conversion factor for going
-                # between KM and Miles
-                converstion_factor = 0.62137119
-
-                # generate a random number from a standard distribution
-                # center around 0, standard dev of 5
-                # 68% within 5 miles of center
-                # 95% within 10
-                # 99.7% within 15
-                # 0.3% greater than 15 from city center
-                # then convert to KM for the shift
-                shift_lat = float(np.random.normal(
-                    0, 5.0, 1) / converstion_factor)
-                shift_long = float(np.random.normal(
-                    0, 5.0, 1) / converstion_factor)
-
-                lat = (
-                    ((float(locations[loc]["lat"]) + shift_lat) / 40075) * 360)
-                lon = (
-                    ((float(locations[loc]["long"]) + shift_long) / 40075) * 360)
+                    random.shuffle(fake_dealerships)
 
                 # add the dealer
                 dealers.append({
@@ -146,8 +148,9 @@ def build_dealers():
                     "state": avail_states[i][0],
                     "city": locations[loc]["city"],
                     "zip": locations[loc]["zip"],
+                    'dealerships': dealerships,
                     "lat": lat,
-                    "long": lon,
+                    "long": lng,
                     "county": locations[loc]["county"],
                     "brands": avail_brands,
                     "ytd": 0,
@@ -186,6 +189,8 @@ def gen_sale(dealer_index):
     date = datetime.combine(f.date_between(start_date="-1y", end_date="today"),
                             datetime.min.time())
 
+    dealership = random.choice(dealers[dealer_index]['dealerships'])
+
     # create a sale dictionary from the given information
     sale = {
         "name": name,
@@ -195,6 +200,7 @@ def gen_sale(dealer_index):
         "brand": brand,
         "model": model,
         "dealer_id": dealer_id,
+        'dealership': dealership['name'],
         "price": price,
         "date": date,
         "days_on_lot": random.randint(1, 100)
