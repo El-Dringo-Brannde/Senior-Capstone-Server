@@ -1,39 +1,35 @@
 {
-   "intents": [
-      {
-         "slots": [
-            {
-               "name": "Type",
-               "type": "TYPE_VALUE"
-            },
-            {
-               "name": "Which",
-               "type": "WHICH_VALUE"
-            },
-            {
-               "name": "Time",
-               "type": "TIME_VALUE"
-            },
-            {
-               "name": "City",
-               "type": "CITY_VALUE"
-            },
-            {
-               "name": "State",
-               "type": "STATE_VALUE"
-            },
-            {
-               "name": "Selector",
-               "type": "SELECTOR_VALUE"
-            }
-         ],
-         "intent": "Capstone"
-      },
-      {
-         "intent": "AMAZON.HelpIntent"
-      },
-      {
-         "intent": "AMAZON.StopIntent"
-      }
-   ]
+  "intents": [
+    {
+      "slots": [
+        {
+          "name": "type",
+          "type": "TYPE_VALUE"
+        },
+        {
+          "name": "view",
+          "type": "VIEW_VALUE"
+        },
+        {
+          "name": "city",
+          "type": "CITY_VALUE"
+        },
+        {
+          "name": "state",
+          "type": "STATE_VALUE"
+        },
+        {
+          "name": "group",
+          "type": "GROUP_VALUE"
+        }
+      ],
+      "intent": "Capstone"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    }
+  ]
 }
