@@ -5,6 +5,7 @@ var MongoClient = require('mongodb').MongoClient;
 var mongoURL = require('./../config/mongoURL.js');
 var userID = 'amzn1.ask.account.testingtesting';
 var idCount = 0;
+var async = require('async');
 
 var get_total_num_docs = function(db, query, callback) {
   var coll = db.collection('queries');
@@ -16,77 +17,107 @@ var get_total_num_docs = function(db, query, callback) {
 };
 
 describe('logger testing logging', function() {
-  it('count stays the same after invalid request', function() {
+  it('count stays the same after invalid request', function(done) {
     q = {
       "userID": userID
     };
 
     MongoClient.connect(mongoURL, function(err, client) {
       var db = client.db('seniorCapstone');
-      assert.equal(null, err);
-      get_total_num_docs(db, q, function(countInit) {
-        request
-          .get('/sales/state/california/?group=color')
-          .end(function(err, res) {
-            get_total_num_docs(db, q, function(countPost) {
-              assert.equal(countPost, countInit);
-              client.close();
-              done();
-            });
-          });
-      });
-    });
-  });
-
-  it('count increases by one after valid request', function() {
-    q = {
-      "userID": userID
-    };
-    MongoClient.connect(mongoURL, function(err, client) {
-      var db = client.db('seniorCapstone');
-      assert.equal(null, err);
-      get_total_num_docs(db, q, function(countInit) {
-        console.log("Pre" + countInit);
-        request
-          .get('/sales/state/california/?group=color&userID=' + userID)
-          .end(function(err, res) {
-            get_total_num_docs(db, q, function(countPost) {
-              console.log("Post" + countPost);
-              assert.equal(countPost, countInit);
-              client.close();
-              done();
-            });
-          });
-      });
-    });
-  });
-  /*
-    it('should have new matching entry for sort by group', function() {
-      var q = {
-        "query": {
-          "group": "color"
-        },
-        "userID": userID,
-        "params": {
-          "state": "california"
-        }
-      }
-
-      MongoClient.connect(mongoURL, function(err, client) {
-        var db = client.db('seniorCapstone');
-        assert.equal(null, err);
-        get_total_num_docs(db, q, function(countInit) {
-          request
-            .get('/sales/state/california/?group=color')
-            .end(function(err, res) {
-              get_total_num_docs(db, q, function(countPost) {
-                assert.equal(countPost, countInit);
-                client.close();
-                done();
+      async.series([
+        function(callback) {
+          get_total_num_docs(db, q, function(count) {
+            request
+              .get('/sales/state/california/?group=color')
+              .end(function(err, res) {
+                callback(null, count);
               });
-
-            });
-        });
+          });
+        },
+        function(callback) {
+          get_total_num_docs(db, q, function(count) {
+            callback(null, count);
+          });
+        }
+      ], function(err, results) {
+        client.close();
+        assert.equal(results[1], results[0]);
+        done();
       });
-    });*/
+    });
+  });
+
+  it('count increases by one after valid request', function(done) {
+    q = {
+      "userID": userID
+    };
+
+    MongoClient.connect(mongoURL, function(err, client) {
+      var db = client.db('seniorCapstone');
+      assert.equal(null, err);
+      async.series([
+        function(callback) {
+          get_total_num_docs(db, q, function(count) {
+            callback(null, count);
+          });
+        },
+        function(callback) {
+          request
+            .get('/sales/state/california/?group=color&userID=' + userID)
+            .end(function(err, res) {
+              callback(null, null);
+            });
+        },
+        function(callback) {
+          get_total_num_docs(db, q, function(count) {
+            callback(null, count);
+          });
+        }
+      ], function(err, result) {
+        assert.equal(result[0] + 1, result[2]);
+        client.close();
+        done();
+      });
+    });
+  });
+
+  it('should have new matching entry for sort by group', function(done) {
+    var q = {
+      "query": {
+        "group": "color"
+      },
+      "userID": userID,
+      "params": {
+        "state": "california"
+      }
+    }
+
+    MongoClient.connect(mongoURL, function(err, client) {
+      var db = client.db('seniorCapstone');
+      assert.equal(null, err);
+      async.series([
+        function(callback) {
+          get_total_num_docs(db, q, function(count) {
+            callback(null, count);
+          });
+        },
+        function(callback) {
+          request
+            .get('/sales/state/california/?group=color&userID=' + userID)
+            .end(function(err, res) {
+              callback(null, null);
+            });
+        },
+        function(callback) {
+          get_total_num_docs(db, q, function(count) {
+            callback(null, count);
+          });
+        }
+      ], function(err, result) {
+        assert.equal(result[0] + 1, result[2]);
+        client.close();
+        done();
+      });
+    });
+  });
 });
