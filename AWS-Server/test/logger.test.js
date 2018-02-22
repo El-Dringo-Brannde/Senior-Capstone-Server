@@ -83,14 +83,15 @@ describe('logger testing logging', function() {
 
   it('should have new matching entry for sort by group', function(done) {
     var q = {
-      "query": {
-        "group": "color"
-      },
-      "userID": userID,
+      "userID": "amzn1.ask.account.testingtesting",
       "params": {
         "state": "california"
+      },
+      "query": {
+        "group": "color",
+        "userID": "amzn1.ask.account.testingtesting"
       }
-    }
+    };
 
     MongoClient.connect(mongoURL, function(err, client) {
       var db = client.db('seniorCapstone');
