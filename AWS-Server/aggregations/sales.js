@@ -1,5 +1,30 @@
 class salesAggregates {
-   constructor() {
+   constructor() { }
+
+   mapLatLng(city, state, name) {
+      return [
+         {
+            $match: {
+               state: state,
+               city: city
+            }
+         },
+         {
+            $unwind: '$dealerships'
+         },
+         {
+            $match: {
+               'dealerships.name': name
+            }
+         },
+         {
+            $project: {
+               _id: 0,
+               lat: '$dealerships.lat',
+               lng: '$dealerships.lng'
+            }
+         }
+      ]
    }
 
    cityBarGroupBy(city, group) {

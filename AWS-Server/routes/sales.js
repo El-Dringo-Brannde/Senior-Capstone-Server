@@ -106,10 +106,17 @@ module.exports = function(mongo, socket) {
         });
     });
 
-    router.get('/map', async (req, res) => {
-        sales.changeViewToMap();
+
+    router.get('/map/name/:name/state/:state/city/:city', sales.validation.nameCityState(), async (req, res) => {
+        sales.validation.checkResult(req, res);
+        let name = req.params.name;
+        let state = req.params.state;
+        let city = req.params.city;
+        let user = req.query.userID
+
+        let result = await sales.changeViewToMap(city, state, name, user);
         res.json({
-            data: 'ok'
+            data: result
         });
     });
 

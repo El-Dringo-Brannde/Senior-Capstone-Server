@@ -29,11 +29,11 @@ make_model = {
 color_list = ["Red", "Silver", "White", "Blue", "Black"]
 
 fake_dealerships = [
-    'tall toms toys',
-    'big bobs buggy',
-    'crazy chris cars',
+    'bobs buggy',
+    'toms toys',
+    'chris cars',
     'jeffs junkers',
-    'hot harrys hatchbacks',
+    'harrys hatchbacks',
     'chads clunkers',
     'jims jalopys'
 ]

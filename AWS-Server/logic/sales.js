@@ -28,13 +28,13 @@ module.exports = class sales extends mongo {
         bubbleObject = this.utility.bubbleLineGroupToObjectKey(bubbleObject);
         bubbleObject.user = user;
 
+        this.emitter(barObj, pieObj, bubbleObject);
         return {
             pieChart: pieObj,
             barChart: barObj,
             bubbleChart: bubbleObject,
             user: user
         }
-        this.emitter(barObj, pieObj, bubbleObject);
     }
 
     async stateGroupBy(state, grouping, user) {
@@ -55,13 +55,13 @@ module.exports = class sales extends mongo {
         bubbleObject = this.utility.bubbleLineGroupToObjectKey(bubbleObject);
         bubbleObject.user = user;
 
+        this.emitter(barObj, pieObj, bubbleObject);
         return {
             pieChart: pieObj,
             barChart: barObj,
             bubbleChart: bubbleObject,
             user: user
         }
-        this.emitter(barObj, pieObj, bubbleObject);
     }
 
     async cityStateGroupBy(city, state, group, user) {
@@ -82,21 +82,25 @@ module.exports = class sales extends mongo {
         bubbleObject = this.utility.bubbleLineGroupToObjectKey(bubbleObject);
         bubbleObject.user = user;
 
+        this.emitter(barObject, pieObject, bubbleObject);
         return {
             pieChart: pieObject,
             barChart: barObject,
             bubbleChart: bubbleObject,
             user: user
         }
-        this.emitter(barObject, pieObject, bubbleObject);
     } // ghetto way of doing math NOT in mongoDB
 
     changeViewToHome() {
         this.socketIO.socket.emit('home');
     }
 
-    changeViewToMap() {
-        this.socketIO.socket.emit('map');
+    async changeViewToMap(city, state, name, user) {
+        let mapAgg = this.aggregateBuilder.mapLatLng(city, state, name)
+        let result = await this.aggregate(mapAgg);
+
+        this.socketIO.socket.emit('map', result);
+        return result
     }
 
     emitter(barObj, pieObj, bubbleObj) {
