@@ -3,7 +3,7 @@ var buildResponse = require('./buildResponse')
 module.exports = class startStop {
    constructor() {
       this.welcomeTitle = 'Welcome';
-      this.welcomeOutput = "Welcome to Look Boss, No Hands. How can I help you?";
+      this.welcomeOutput = "How can I help you?";
       this.welcomeSessionEnd = false;
       this.exitOutput = 'Thank you for trying Look Boss, No Hands! Have a nice day!';
       this.exitTitle = 'Session Ended';
@@ -24,20 +24,19 @@ module.exports = class startStop {
    }
 
    getWelcomeResponse(callback, sessionID) {
-      console.log("session id " + sessionID);
+      callback({},
+         this.buildResponse(this.welcomeTitle, this.welcomeOutput, this.repromptText, this.welcomeSessionEnd));
+      // let requestOptions = {
+      //    method: 'POST',
+      //    uri: this.serverURL + 'session/create',
+      //    body: {
+      //       sessionID: sessionID
+      //    },
+      //    json: true
+      // }
 
-      let requestOptions = {
-         method: 'POST',
-         uri: this.serverURL + 'session/create',
-         body: {
-            sessionID: sessionID
-         },
-         json: true
-      }
-
-      this.rp(requestOptions)
-         .then(resp => callback({},
-            this.buildResponse(this.welcomeTitle, this.welcomeOutput, this.repromptText, this.welcomeSessionEnd)))
-         .catch(err => this.handleErr(err, callback));
+      // this.rp(requestOptions)
+      //    .then(resp =>
+      //    .catch(err => this.handleErr(err, callback));
    }
 }
