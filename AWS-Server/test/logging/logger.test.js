@@ -2,7 +2,7 @@ var request = require('supertest');
 request = request('http://35.169.224.183:3105');
 var assert = require('chai').assert;
 var MongoClient = require('mongodb').MongoClient;
-var mongoURL = require('./../../config/mongoURL.js');
+var mongoURL = 'mongodb://admin:IHateHackers12345@35.169.224.183:27017/seniorCapstone?authMechanism=SCRAM-SHA-1&authSource=admin';
 var userID = 'amzn1.ask.account.testingtesting';
 var idCount = 0;
 var async = require('async');
