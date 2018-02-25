@@ -5,9 +5,14 @@ socket.on('connect', msg => {
 });
 
 socket.on('Pie_Chart', data => {
-   console.log(data);
+   // console.log(data);
 });
 
 socket.on('Bar_Chart', data => {
+   console.log(data)
+})
+
+socket.on('Bubble_Chart', data => {
+   console.log("BUBBLE ")
    console.log(data)
 })
