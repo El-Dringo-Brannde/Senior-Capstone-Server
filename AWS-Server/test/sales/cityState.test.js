@@ -79,7 +79,7 @@ describe('city state sales route combo', function() {
          .end(function(err, res) {
             let response = res.body.data;
             let bubbleChartKeys = Object.keys(response.bubbleChart);
-            assert.includeMembers(["0", "1", '2', "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"], bubbleChartKeys)
+            assert.includeMembers(["0", "1", '2', "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "user"], bubbleChartKeys)
 
             for (var i of bubbleChartKeys) {
                let cur = response.bubbleChart[i]
