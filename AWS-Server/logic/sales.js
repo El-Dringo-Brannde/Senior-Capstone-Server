@@ -99,7 +99,7 @@ module.exports = class sales extends mongo {
         let mapAgg = this.aggregateBuilder.mapLatLng(city, state, name)
         let result = await this.aggregate(mapAgg);
 
-        this.socketIO.socket.emit('map', result);
+        this.socketIO.socket.emit('map', result[0]);
         return result
     }
 

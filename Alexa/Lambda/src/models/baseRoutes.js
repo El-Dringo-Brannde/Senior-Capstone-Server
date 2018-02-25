@@ -7,6 +7,16 @@ module.exports = class baseRoutes {
         this.rp = require('request-promise');
     }
 
+    // entry point to parsing routes
+    parseRoute(intent, userID, callback) {
+        const intentName = intent.name;
+        this.changeView(intent, userID)
+        delete intent.slots.view
+        let route = this.buildQueryString(intent.slots)
+        let sessionQuery = 'userID' + '=' + userID
+        this.sendRequest(route, sessionQuery, intentName, callback)
+    }
+
     handleErr(err, callback) {
         let speechOutput = "What was that? I couldn't understand you, please try again";
         let repromptText = err;
@@ -36,22 +46,25 @@ module.exports = class baseRoutes {
     }
 
 
-    parseRoute(intent, userID, callback) {
-        const intentName = intent.name;
-        this.changeView(intent.slots.view)
-        delete intent.slots.view
-        let route = this.buildQueryString(intent.slots)
-        let sessionQuery = 'userID' + '=' + userID
-        this.sendRequest(route, sessionQuery, intentName, callback)
-    }
-
-    changeView(viewType) {
-        if (viewType.value == 'map')
-            this.rp(this.serverURL + 'sales/map')
+    changeView(intents, userID) {
+        if (intents.slots.view.value == 'map') {
+            let query = this.pullViewParams(intents, userID)
+            console.log(query)
+            this.rp(this.serverURL + query)
                 .then(resp => console.log(resp));
-        else
+        } else
             this.rp(this.serverURL + 'sales/home')
                 .then(resp => console.log(resp));
+    }
+
+    pullViewParams(intents, userID) {
+        let url = 'sales/map/name/'
+        url += intents.slots.location.value + '/'
+        delete intents.slots.location
+        url += 'state/' + intents.slots.state.value + '/'
+        url += 'city/' + intents.slots.city.value + '/'
+        url += `?userID=${userID}`
+        return url
     }
 
     sendRequest(route, sessionQuery, intentName, callback) {

@@ -13,9 +13,4 @@ socket.on('Bar_Chart', data => {
 })
 
 socket.on('home', data => console.log("Switching to home"))
-socket.on('map', data => console.log("Switching to map"))
-
-socket.on('Bubble_Chart', data => {
-    // console.log("BUBBLE ")
-    // console.log(data)
-})
+socket.on('map', data => console.log("Switching to map", data))
