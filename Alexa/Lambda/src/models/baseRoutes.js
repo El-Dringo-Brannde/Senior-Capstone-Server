@@ -49,7 +49,6 @@ module.exports = class baseRoutes {
     changeView(intents, userID) {
         if (intents.slots.view.value == 'map') {
             let query = this.pullViewParams(intents, userID)
-            console.log(query)
             this.rp(this.serverURL + query)
                 .then(resp => console.log(resp));
         } else
