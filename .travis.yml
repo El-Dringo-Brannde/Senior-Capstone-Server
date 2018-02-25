@@ -13,6 +13,6 @@ before_install:
 install:
   - yarn install
 script:
-  - npm test
+  - cd AWS-Server && npm test
 notifications:
   email: false
