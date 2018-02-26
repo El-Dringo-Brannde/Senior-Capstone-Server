@@ -21,6 +21,31 @@ class salesValidator {
             check('state')
                 .exists()
                 .isAlpha(),
+            check('name')
+                .exists()
+                .isIn([
+                    'bobs buggy',
+                    'toms toys',
+                    'chris cars',
+                    'jeffs junkers',
+                    'harrys hatchbacks',
+                    'chads clunkers',
+                    'jims jalopys'
+                ]),
+            check('userID')
+                .isAscii()
+                .exists()
+        ]
+    }
+
+    nameGroupCityState() {
+        return [
+            check('city')
+                .exists()
+                .isAlpha(),
+            check('state')
+                .exists()
+                .isAlpha(),
             check('group')
                 .exists()
                 .isAlpha(),

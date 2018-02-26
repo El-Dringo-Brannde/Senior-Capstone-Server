@@ -97,16 +97,24 @@ module.exports = function(mongo, socket) {
         logAndUpdate(req, user)
     });
 
-    // used to change the view in the VR environment
-    router.get('/home', async (req, res) => {
-        sales.changeViewToHome();
+
+    //switch TO map view, don't populate data just yet.
+    router.get('/mapView/name/:name/state/:state/city/:city', sales.validation.nameCityState(), async (req, res) => {
+        sales.validation.checkResult(req, res);
+        let name = req.params.name
+        let state = req.params.state
+        let city = req.params.city
+        let user = req.query.userID
+
+        let result = await sales.changeViewToMap(city, state, name, user);
         res.json({
-            data: 'ok'
+            data: result
         });
     });
 
 
-    router.get('/map/name/:name/state/:state/city/:city', sales.validation.nameCityState(), async (req, res) => {
+    // Populate data in the VR view.
+    router.get('/map/name/:name/state/:state/city/:city', sales.validation.nameGroupCityState(), async (req, res) => {
         sales.validation.checkResult(req, res);
         let name = req.params.name
         let state = req.params.state
@@ -114,10 +122,19 @@ module.exports = function(mongo, socket) {
         let user = req.query.userID
         let group = req.query.group
 
-        await sales.changeViewToMap(city, state, name, user);
         let result = await sales.mapCityStateGroupBy(city, state, group, name, user)
+        let speechResponse = speechlet.repeatDealershipSpeechlet(city, state, name, group, result);
         res.json({
-            data: result
+            data: result,
+            speechlet: speechResponse
+        });
+    });
+
+    // used to change the view in the VR environment
+    router.get('/home', async (req, res) => {
+        sales.changeViewToHome();
+        res.json({
+            data: 'ok'
         });
     });
 

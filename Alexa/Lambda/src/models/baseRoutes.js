@@ -10,11 +10,15 @@ module.exports = class baseRoutes {
     // entry point to parsing routes
     parseRoute(intent, userID, callback) {
         const intentName = intent.name;
-        this.changeView(intent, userID)
-        delete intent.slots.view
-        let route = this.buildQueryString(intent.slots)
-        let sessionQuery = 'userID' + '=' + userID
-        this.sendRequest(route, sessionQuery, intentName, callback)
+        let response = this.changeView(intent, userID, intentName, callback)
+        if (intent.slots.view.value == 'map')
+            return
+        else {
+            delete intent.slots.view
+            let route = this.buildQueryString(intent.slots)
+            let sessionQuery = 'userID' + '=' + userID
+            this.sendRequest(route, sessionQuery, intentName, callback)
+        }
     }
 
     handleErr(err, callback) {
@@ -46,18 +50,24 @@ module.exports = class baseRoutes {
     }
 
 
-    changeView(intents, userID) {
+    changeView(intents, userID, intentName, callback) {
         if (intents.slots.view.value == 'map') {
-            let query = this.pullViewParams(intents, userID)
+            let query = this.pullMapViewParams(intents, userID)
             this.rp(this.serverURL + query)
-                .then(resp => console.log(resp));
+                .then(resp => {
+                    query = query.replace('mapView', 'map')
+                    this.rp(this.serverURL + query + `&group=${intents.slots.group.value}`)
+                        .then(resp => {
+                            this.sendBackReturnedData(intentName, resp, callback)
+                        })
+                });
         } else
             this.rp(this.serverURL + 'sales/home')
                 .then(resp => console.log(resp));
     }
 
-    pullViewParams(intents, userID) {
-        let url = 'sales/map/name/'
+    pullMapViewParams(intents, userID) {
+        let url = 'sales/mapView/name/'
         url += intents.slots.location.value + '/'
         delete intents.slots.location
         url += 'state/' + intents.slots.state.value + '/'
