@@ -91,6 +91,28 @@ module.exports = class sales extends mongo {
         }
     } // ghetto way of doing math NOT in mongoDB
 
+    async mapCityStateGroupBy(city, state, group, name, user) {
+        let pieObject = {}, barObject = {}, bubbleObject = {};
+
+        let pieAgg = this.aggregateBuilder.mapCityStatePieGroupBy(city, state, group, name);
+        pieObject = await this.aggregate(pieAgg)
+        pieObject = this.utility.arrayToObject(pieObject)
+        pieObject.user = user;
+
+        let barAgg = this.aggregateBuilder.mapCityStateBarGroupBy(city, state, group, name)
+        barObject = await this.aggregate(barAgg);
+        barObject = this.utility.pullGroupToObjectKey(barObject);
+        barObject.user = user;
+
+        this.emitter(barObject, pieObject, bubbleObject);
+        return {
+            pieChart: pieObject,
+            barChart: barObject,
+            bubbleChart: bubbleObject,
+            user: user
+        }
+    }
+
     changeViewToHome() {
         this.socketIO.socket.emit('home');
     }

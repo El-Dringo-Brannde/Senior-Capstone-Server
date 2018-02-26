@@ -158,6 +158,41 @@ class salesAggregates {
         ]
     }
 
+    mapCityStateBarGroupBy(city, state, group, name) {
+        return [
+            {
+                $match: {
+                    'state': { $regex: state, $options: 'i' },
+                    'city': { $regex: city, $options: 'i' },
+                }
+            },
+            {
+                $unwind: '$sales'
+            },
+            {
+                $match: {
+                    'sales.dealership': { $regex: name, $options: 'i' }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        group: '$sales.' + group,
+                        month: {
+                            $month: '$sales.date'
+                        }
+                    },
+                    sales: {
+                        $sum: '$sales.price'
+                    }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            },
+        ]
+    }
+
     cityStatePieGroupBy(city, state, group) {
         return [
             {
@@ -170,6 +205,32 @@ class salesAggregates {
                 $unwind: '$sales'
             },
             {
+                $group: {
+                    _id: '$sales.' + group,
+                    sales: {
+                        $sum: '$sales.price'
+                    }
+                }
+            }
+        ]
+    }
+
+    mapCityStatePieGroupBy(city, state, group, name) {
+        return [
+            {
+                $match: {
+                    'state': { $regex: state, $options: 'i' },
+                    'city': { $regex: city, $options: 'i' },
+                }
+            },
+            {
+                $unwind: '$sales'
+            },
+            {
+                $match: {
+                    'sales.dealership': { $regex: name, $options: 'i' }
+                }
+            }, {
                 $group: {
                     _id: '$sales.' + group,
                     sales: {

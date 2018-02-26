@@ -1,5 +1,4 @@
 var router = require('express').Router();
-var expressValidator = require('express-validator');
 var sales = require('./../logic/sales');
 let speechlet = require('./../speechlets/sales');
 var { check, validationResult } = require('express-validator/check');
@@ -109,12 +108,14 @@ module.exports = function(mongo, socket) {
 
     router.get('/map/name/:name/state/:state/city/:city', sales.validation.nameCityState(), async (req, res) => {
         sales.validation.checkResult(req, res);
-        let name = req.params.name;
-        let state = req.params.state;
-        let city = req.params.city;
+        let name = req.params.name
+        let state = req.params.state
+        let city = req.params.city
         let user = req.query.userID
+        let group = req.query.group
 
-        let result = await sales.changeViewToMap(city, state, name, user);
+        await sales.changeViewToMap(city, state, name, user);
+        let result = await sales.mapCityStateGroupBy(city, state, group, name, user)
         res.json({
             data: result
         });
