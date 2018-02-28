@@ -1,8 +1,7 @@
 let utility = require('./../utility/sales');
 let _ = require('lodash')
 module.exports = class salesSpeechlet {
-   constructor() { }
-
+   constructor() {}
 
    repeatSpeechlet(city = '', state = '', grouping, data) {
       if (_.isEmpty(data.pieChart) && _.isEmpty(data.barChart))

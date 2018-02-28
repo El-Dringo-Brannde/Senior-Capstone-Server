@@ -12,7 +12,9 @@ module.exports = class sales extends mongo {
    }
 
    async cityGroupBy(city, grouping, user) {
-      let barObj = {}, pieObj = {}, bubbleObject = {};
+      let barObj = {},
+         pieObj = {},
+         bubbleObject = {};
 
       let pieAgg = this.aggregateBuilder.cityPieGroupBy(city, grouping)
       let pieRes = await this.aggregate(pieAgg)
@@ -41,13 +43,14 @@ module.exports = class sales extends mongo {
    }
 
    async stateGroupBy(state, grouping, user) {
-      let barObj = {}, pieObj = {}, bubbleObject = {};
+      let barObj = {},
+         pieObj = {},
+         bubbleObject = {};
 
       let pieAgg = this.aggregateBuilder.statePieGroupBy(state, grouping)
       let pieRes = await this.aggregate(pieAgg)
       pieObj = this.utility.arrayToObject(pieRes)
       pieObj.user = user;
-
 
       let barAgg = this.aggregateBuilder.stateBarGroupBy(state, grouping)
       let barRes = await this.aggregate(barAgg)
@@ -55,7 +58,6 @@ module.exports = class sales extends mongo {
       barObj = this.utility.pullGroupToObjectKey(barRes)
 
       barObj.user = user;
-
 
       bubbleObject = this.utility.bubbleLineGroupToObjectKey(bubbleObject);
       bubbleObject.user = user;
@@ -73,7 +75,9 @@ module.exports = class sales extends mongo {
    }
 
    async cityStateGroupBy(city, state, group, user) {
-      let pieObject = {}, barObject = {}, bubbleObject = {};
+      let pieObject = {},
+         barObject = {},
+         bubbleObject = {};
 
       let pieAgg = this.aggregateBuilder.cityStatePieGroupBy(city, state, group);
       pieObject = await this.aggregate(pieAgg)

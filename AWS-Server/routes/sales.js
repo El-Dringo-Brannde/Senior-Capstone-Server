@@ -1,13 +1,17 @@
-var router = require('express').Router();
+var router = require('express')
+   .Router();
 var expressValidator = require('express-validator');
 var sales = require('./../logic/sales');
 let speechlet = require('./../speechlets/sales');
-var { check, validationResult } = require('express-validator/check');
+var {
+   check,
+   validationResult
+} = require('express-validator/check');
 let logger = require('./../logic/logger')
 let states = require('./../logic/state');
 
 // All routes here are prefixed by the /sales route
-module.exports = function(mongo, socket) {
+module.exports = function (mongo, socket) {
    sales = new sales(mongo, 'sales', socket);
    logger = new logger(mongo, 'queries', null);
    states = new states(mongo, 'states', null);
@@ -69,7 +73,6 @@ module.exports = function(mongo, socket) {
       let data = await sales.cityStateGroupBy(city, state, grouping, user);
       let speechResponse = speechlet.repeatSpeechlet(city, state, grouping, data);
 
-
       res.json({
          data: data,
          speechlet: speechResponse
@@ -90,7 +93,6 @@ module.exports = function(mongo, socket) {
       let data = await sales.cityStateGroupBy(city, state, grouping, user);
       let speechResponse = speechlet.repeatSpeechlet(city, state, grouping, data);
 
-
       res.json({
          data: data,
          speechlet: speechResponse
@@ -98,11 +100,9 @@ module.exports = function(mongo, socket) {
       logAndUpdate(req, user)
    });
 
-
    function logAndUpdate(req, user) {
       logger.logRoute(req, user);
       states.updateState(req, user);
    }
    return router;
 };
-

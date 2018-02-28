@@ -1,9 +1,13 @@
-var router = require('express').Router();
-var { check, validationResult } = require('express-validator/check');
+var router = require('express')
+   .Router();
+var {
+   check,
+   validationResult
+} = require('express-validator/check');
 let util = require('util');
 
 class salesValidator {
-   constructor() { }
+   constructor() {}
 
    checkResult(req, res) {
       let errors = validationResult(req)
@@ -17,14 +21,14 @@ class salesValidator {
    state() {
       return [
          check('state')
-            .exists()
-            .isAlpha(),
+         .exists()
+         .isAlpha(),
          check('group')
-            .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
-            .exists(),
+         .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
+         .exists(),
          check('userID')
-            .isAscii()
-            .exists()
+         .isAscii()
+         .exists()
       ] // check against US state array
    }
 
@@ -32,14 +36,14 @@ class salesValidator {
    city() {
       return [
          check('city')
-            .exists()
-            .isAlpha(),
+         .exists()
+         .isAlpha(),
          check('group')
-            .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
-            .exists(),
+         .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
+         .exists(),
          check('userID')
-            .isAscii()
-            .exists()
+         .isAscii()
+         .exists()
       ] // check against US state array
    }
 
@@ -47,17 +51,17 @@ class salesValidator {
    cityState() {
       return [
          check('city')
-            .exists()
-            .isAlpha(),
+         .exists()
+         .isAlpha(),
          check('state')
-            .exists()
-            .isAlpha(),
+         .exists()
+         .isAlpha(),
          check('group')
-            .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
-            .exists(),
+         .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
+         .exists(),
          check('userID')
-            .isAscii()
-            .exists()
+         .isAscii()
+         .exists()
       ] // check against US state array
    }
 }

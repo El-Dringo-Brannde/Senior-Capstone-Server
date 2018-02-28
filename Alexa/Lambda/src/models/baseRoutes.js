@@ -35,7 +35,6 @@ module.exports = class baseRoutes {
       callback(this.sessionAttributes, this.buildResponse(intentName, speechOutput, repromptText, false));
    }
 
-
    parseRoute(intent, userID, callback) {
       const intentName = intent.name;
       let route = this.buildQueryString(intent.slots)
@@ -47,8 +46,10 @@ module.exports = class baseRoutes {
    sendRequest(route, sessionQuery, intentName, callback) {
       this.rp(this.serverURL + route.toLowerCase() + sessionQuery)
          .then(resp => this.sendBackReturnedData(intentName, resp, callback))
-         .catch(err => { this.handleErr(err, callback) });
+         .catch(err => {
+            this.handleErr(err, callback)
+         });
    }
 
-   logRoute() { } // implement logic to log route here
+   logRoute() {} // implement logic to log route here
 }

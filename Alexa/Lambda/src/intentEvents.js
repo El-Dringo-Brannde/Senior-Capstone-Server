@@ -23,10 +23,9 @@ module.exports = class events {
       // this.startStop.handleSessionEndRequest(callback)
    }
 
-
    /**
-   * Called when the user specifies an intent for this skill.
-   */
+    * Called when the user specifies an intent for this skill.
+    */
    onIntent(intentRequest, userID, callback) {
       const intent = intentRequest.intent;
       const intentName = intentRequest.intent.name;

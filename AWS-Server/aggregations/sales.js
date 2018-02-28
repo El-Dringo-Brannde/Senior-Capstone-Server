@@ -1,10 +1,8 @@
 class salesAggregates {
-   constructor() {
-   }
+   constructor() {}
 
    cityBarGroupBy(city, group) {
-      return [
-         {
+      return [{
             $match: {
                'city': city,
             }
@@ -26,14 +24,15 @@ class salesAggregates {
             }
          },
          {
-            $sort: { _id: 1 }
+            $sort: {
+               _id: 1
+            }
          },
       ]
    }
 
    cityPieGroupBy(city, group) {
-      return [
-         {
+      return [{
             $match: {
                'city': city,
             }
@@ -53,8 +52,7 @@ class salesAggregates {
    }
 
    statePieGroupBy(state, group) {
-      return [
-         {
+      return [{
             $match: {
                'state': state,
             }
@@ -74,8 +72,7 @@ class salesAggregates {
    }
 
    stateBarGroupBy(state, group) {
-      return [
-         {
+      return [{
             $match: {
                'state': state,
             }
@@ -97,15 +94,15 @@ class salesAggregates {
             }
          },
          {
-            $sort: { _id: 1 }
+            $sort: {
+               _id: 1
+            }
          },
       ]
    }
 
-
    cityStateBarGroupBy(city, state, group) {
-      return [
-         {
+      return [{
             $match: {
                'state': state,
                'city': city,
@@ -128,14 +125,15 @@ class salesAggregates {
             }
          },
          {
-            $sort: { _id: 1 }
+            $sort: {
+               _id: 1
+            }
          },
       ]
    }
 
    cityStatePieGroupBy(city, state, group) {
-      return [
-         {
+      return [{
             $match: {
                'state': state,
                'city': city,
