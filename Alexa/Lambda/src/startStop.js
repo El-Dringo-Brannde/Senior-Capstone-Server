@@ -26,17 +26,5 @@ module.exports = class startStop {
    getWelcomeResponse(callback, sessionID) {
       callback({},
          this.buildResponse(this.welcomeTitle, this.welcomeOutput, this.repromptText, this.welcomeSessionEnd));
-      // let requestOptions = {
-      //    method: 'POST',
-      //    uri: this.serverURL + 'session/create',
-      //    body: {
-      //       sessionID: sessionID
-      //    },
-      //    json: true
-      // }
-
-      // this.rp(requestOptions)
-      //    .then(resp =>
-      //    .catch(err => this.handleErr(err, callback));
    }
 }

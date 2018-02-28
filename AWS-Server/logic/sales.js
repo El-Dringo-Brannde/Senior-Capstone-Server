@@ -30,10 +30,7 @@ module.exports = class sales extends mongo {
       bubbleObject = this.utility.bubbleLineGroupToObjectKey(bubbleObject);
       bubbleObject.user = user;
 
-      this.socketIO.socket.emit('Bubble_Chart', bubbleObject);
-      this.socketIO.socket.emit('Bar_Chart', barObj);
-      this.socketIO.socket.emit('Pie_Chart', pieObj);
-
+      this.emitter(barObj, pieObj, bubbleObject);
       return {
          pieChart: pieObj,
          barChart: barObj,
@@ -56,16 +53,12 @@ module.exports = class sales extends mongo {
       let barRes = await this.aggregate(barAgg)
       bubbleObject = JSON.parse(JSON.stringify(barRes)); // deep copy object
       barObj = this.utility.pullGroupToObjectKey(barRes)
-
       barObj.user = user;
 
       bubbleObject = this.utility.bubbleLineGroupToObjectKey(bubbleObject);
       bubbleObject.user = user;
 
-      this.socketIO.socket.emit('Bar_Chart', barObj);
-      this.socketIO.socket.emit('Pie_Chart', pieObj);
-      this.socketIO.socket.emit('Bubble_Chart', bubbleObject);
-
+      this.emitter(barObj, pieObj, bubbleObject);
       return {
          pieChart: pieObj,
          barChart: barObj,
@@ -94,15 +87,54 @@ module.exports = class sales extends mongo {
       bubbleObject = this.utility.bubbleLineGroupToObjectKey(bubbleObject);
       bubbleObject.user = user;
 
-      this.socketIO.socket.emit('Bar_Chart', barObject);
-      this.socketIO.socket.emit('Pie_Chart', pieObject);
-      this.socketIO.socket.emit('Bubble_Chart', bubbleObject);
-
+      this.emitter(barObject, pieObject, bubbleObject);
       return {
          pieChart: pieObject,
          barChart: barObject,
          bubbleChart: bubbleObject,
          user: user
-      } // ghetto way of doing math NOT in mongoDB
+      }
+   } // ghetto way of doing math NOT in mongoDB
+
+   async mapCityStateGroupBy(city, state, group, name, user) {
+      let pieObject = {},
+         barObject = {},
+         bubbleObject = {};
+
+      let pieAgg = this.aggregateBuilder.mapCityStatePieGroupBy(city, state, group, name);
+      pieObject = await this.aggregate(pieAgg)
+      pieObject = this.utility.arrayToObject(pieObject)
+      pieObject.user = user;
+
+      let barAgg = this.aggregateBuilder.mapCityStateBarGroupBy(city, state, group, name)
+      barObject = await this.aggregate(barAgg);
+      barObject = this.utility.pullGroupToObjectKey(barObject);
+      barObject.user = user;
+
+      this.emitter(barObject, pieObject, bubbleObject);
+      return {
+         pieChart: pieObject,
+         barChart: barObject,
+         bubbleChart: bubbleObject,
+         user: user
+      }
+   }
+
+   changeViewToHome() {
+      this.socketIO.socket.emit('home');
+   }
+
+   async changeViewToMap(city, state, name, user) {
+      let mapAgg = this.aggregateBuilder.mapLatLng(city, state, name)
+      let result = await this.aggregate(mapAgg);
+
+      this.socketIO.socket.emit('map', result[0]);
+      return result
+   }
+
+   emitter(barObj, pieObj, bubbleObj) {
+      this.socketIO.socket.emit('Bar_Chart', barObj);
+      this.socketIO.socket.emit('Pie_Chart', pieObj);
+      this.socketIO.socket.emit('Bubble_Chart', bubbleObj);
    }
 }

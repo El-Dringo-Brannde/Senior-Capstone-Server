@@ -1,10 +1,47 @@
 class salesAggregates {
    constructor() {}
 
+   mapLatLng(city, state, name) {
+      return [{
+            $match: {
+               state: {
+                  $regex: state,
+                  $options: 'i'
+               },
+               city: {
+                  $regex: city,
+                  $options: 'i'
+               }
+            }
+         },
+         {
+            $unwind: '$dealerships'
+         },
+         {
+            $match: {
+               'dealerships.name': {
+                  $regex: name,
+                  $options: 'i'
+               }
+            }
+         },
+         {
+            $project: {
+               _id: 0,
+               lat: '$dealerships.lat',
+               lng: '$dealerships.lng'
+            }
+         }
+      ]
+   }
+
    cityBarGroupBy(city, group) {
       return [{
             $match: {
-               'city': city,
+               'city': {
+                  $regex: city,
+                  $options: 'i'
+               },
             }
          },
          {
@@ -34,7 +71,10 @@ class salesAggregates {
    cityPieGroupBy(city, group) {
       return [{
             $match: {
-               'city': city,
+               'city': {
+                  $regex: city,
+                  $options: 'i'
+               }
             }
          },
          {
@@ -54,7 +94,10 @@ class salesAggregates {
    statePieGroupBy(state, group) {
       return [{
             $match: {
-               'state': state,
+               'state': {
+                  $regex: state,
+                  $options: 'i'
+               },
             }
          },
          {
@@ -74,7 +117,10 @@ class salesAggregates {
    stateBarGroupBy(state, group) {
       return [{
             $match: {
-               'state': state,
+               'state': {
+                  $regex: state,
+                  $options: 'i'
+               },
             }
          },
          {
@@ -104,8 +150,14 @@ class salesAggregates {
    cityStateBarGroupBy(city, state, group) {
       return [{
             $match: {
-               'state': state,
-               'city': city,
+               'state': {
+                  $regex: state,
+                  $options: 'i'
+               },
+               'city': {
+                  $regex: city,
+                  $options: 'i'
+               },
             }
          },
          {
@@ -132,17 +184,102 @@ class salesAggregates {
       ]
    }
 
-   cityStatePieGroupBy(city, state, group) {
+   mapCityStateBarGroupBy(city, state, group, name) {
       return [{
             $match: {
-               'state': state,
-               'city': city,
+               'state': {
+                  $regex: state,
+                  $options: 'i'
+               },
+               'city': {
+                  $regex: city,
+                  $options: 'i'
+               },
             }
          },
          {
             $unwind: '$sales'
          },
          {
+            $match: {
+               'sales.dealership': {
+                  $regex: name,
+                  $options: 'i'
+               }
+            }
+         },
+         {
+            $group: {
+               _id: {
+                  group: '$sales.' + group,
+                  month: {
+                     $month: '$sales.date'
+                  }
+               },
+               sales: {
+                  $sum: '$sales.price'
+               }
+            }
+         },
+         {
+            $sort: {
+               _id: 1
+            }
+         },
+      ]
+   }
+
+   cityStatePieGroupBy(city, state, group) {
+      return [{
+            $match: {
+               'state': {
+                  $regex: state,
+                  $options: 'i'
+               },
+               'city': {
+                  $regex: city,
+                  $options: 'i'
+               },
+            }
+         },
+         {
+            $unwind: '$sales'
+         },
+         {
+            $group: {
+               _id: '$sales.' + group,
+               sales: {
+                  $sum: '$sales.price'
+               }
+            }
+         }
+      ]
+   }
+
+   mapCityStatePieGroupBy(city, state, group, name) {
+      return [{
+            $match: {
+               'state': {
+                  $regex: state,
+                  $options: 'i'
+               },
+               'city': {
+                  $regex: city,
+                  $options: 'i'
+               },
+            }
+         },
+         {
+            $unwind: '$sales'
+         },
+         {
+            $match: {
+               'sales.dealership': {
+                  $regex: name,
+                  $options: 'i'
+               }
+            }
+         }, {
             $group: {
                _id: '$sales.' + group,
                sales: {

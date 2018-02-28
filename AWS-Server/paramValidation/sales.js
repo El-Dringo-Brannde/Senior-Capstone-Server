@@ -13,8 +13,62 @@ class salesValidator {
       let errors = validationResult(req)
       if (!errors.isEmpty())
          res.json({
-            error: errors.mapped()
+            error: errors.mapped(),
+            speechlet: `I'm sorry, there was an error in your query.`
          })
+   }
+
+   nameCityState() {
+      return [
+         check('city')
+         .exists()
+         .isAlpha(),
+         check('state')
+         .exists()
+         .isAlpha(),
+         check('name')
+         .exists()
+         .isIn([
+            'bobs buggy',
+            'toms toys',
+            'chris cars',
+            'jeffs junkers',
+            'harrys hatchbacks',
+            'chads clunkers',
+            'jims jalopys'
+         ]),
+         check('userID')
+         .isAscii()
+         .exists()
+      ]
+   }
+
+   nameGroupCityState() {
+      return [
+         check('city')
+         .exists()
+         .isAlpha(),
+         check('state')
+         .exists()
+         .isAlpha(),
+         check('group')
+         .exists()
+         .isAlpha(),
+         check('name')
+         .exists()
+         .isIn([
+            'bobs buggy',
+            'toms toys',
+            'chris cars',
+            'jeffs junkers',
+            'harrys hatchbacks',
+            'chads clunkers',
+            'jims jalopys'
+         ]),
+         check('userID')
+         .isAscii()
+         .exists()
+      ]
    }
 
    //Param Validation for state

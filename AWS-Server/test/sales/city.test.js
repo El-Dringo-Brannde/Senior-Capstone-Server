@@ -84,16 +84,18 @@ describe('city sales routes', function () {
          .end(function (err, res) {
             let response = res.body.data;
             let bubbleChartKeys = Object.keys(response.bubbleChart);
-            // assert.includeMembers(colors, bubbleChartKeys)
+            assert.includeMembers(colors, bubbleChartKeys)
 
-            for (var i of bubbleChartKeys) {
-               let cur = response.bubbleChart[i]
-               if (i == 'user')
-                  assert.isString(cur)
-               else {
-                  assert.isObject(cur)
-                  assert.property(cur, 'sales')
-                  assert.property(cur, 'month')
+            for (var i in response.bubbleChart) {
+               if (i != 'user') {
+                  assert.isArray(response.bubbleChart[i])
+                  for (var j of response.bubbleChart[i]) {
+                     assert.isObject(j)
+                     assert.property(j, 'sales')
+                     assert.property(j, 'month')
+                  }
+               } else {
+                  assert.isString(response.bubbleChart[i])
                }
             }
             done();
