@@ -7,7 +7,9 @@ var testRoutes = require('./routes/test');
 var sessionRoutes = require('./routes/session');
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({
+   extended: false
+}))
 
 initServer.then(mongoSocket => {
    app.use('/sales', salesRoutes(mongoSocket, io));

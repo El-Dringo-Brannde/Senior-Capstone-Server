@@ -1,27 +1,28 @@
 var request = require('supertest');
 request = request('http://35.169.224.183:3105');
-var assert = require('chai').assert;
+var assert = require('chai')
+   .assert;
 
 var colors = ['Blue', 'White', 'Black', 'Silver', 'Red', 'user']
 
+describe('State sales routes', function () {
 
-describe('State sales routes', function() {
-
-   it('should get back an error regarding incorrect userID params', function(done) {
+   it('should get back an error regarding incorrect userID params', function (done) {
       request
          .get('/sales/state/california/?group=color')
-         .end(function(err, res) {
+         .end(function (err, res) {
             assert.exists(res.body.error.userID)
             assert.equal(res.body.error.userID.msg, 'Invalid value')
             done();
          });
    });
 
-   it('should get data back from the request', function(done) {
-      var userID = 'amzn1.ask.account.AHNWAHWU4XEGXMVIRTGD7E7K6FWMEYQEYXOKEJPEYRRB7HXPSRUAYSI27OITQKHXETSIQE4L7Y3YNHMIKJROBL24DJH3GJUNRXCS6QTMJKJL64DUIZ3LJWAU3GF2PLITSVW7VLXP2GJSMORRXXWAOWSTVCL6QE2UOASGKVCG3AMNN4CIQQQAXMPD3A2PPLQGTSLVPMHZONBKU3A'
+   it('should get data back from the request', function (done) {
+      var userID =
+         'amzn1.ask.account.AHNWAHWU4XEGXMVIRTGD7E7K6FWMEYQEYXOKEJPEYRRB7HXPSRUAYSI27OITQKHXETSIQE4L7Y3YNHMIKJROBL24DJH3GJUNRXCS6QTMJKJL64DUIZ3LJWAU3GF2PLITSVW7VLXP2GJSMORRXXWAOWSTVCL6QE2UOASGKVCG3AMNN4CIQQQAXMPD3A2PPLQGTSLVPMHZONBKU3A'
       request
          .get('/sales/state/california/?group=color&userID=' + userID)
-         .end(function(err, res) {
+         .end(function (err, res) {
             let response = res.body.data;
             assert.exists(response.pieChart)
             assert.exists(response.barChart)
@@ -30,11 +31,12 @@ describe('State sales routes', function() {
          });
    });
 
-   it('should get the correct data back from the pieChart request', function(done) {
-      var userID = 'amzn1.ask.account.AHNWAHWU4XEGXMVIRTGD7E7K6FWMEYQEYXOKEJPEYRRB7HXPSRUAYSI27OITQKHXETSIQE4L7Y3YNHMIKJROBL24DJH3GJUNRXCS6QTMJKJL64DUIZ3LJWAU3GF2PLITSVW7VLXP2GJSMORRXXWAOWSTVCL6QE2UOASGKVCG3AMNN4CIQQQAXMPD3A2PPLQGTSLVPMHZONBKU3A'
+   it('should get the correct data back from the pieChart request', function (done) {
+      var userID =
+         'amzn1.ask.account.AHNWAHWU4XEGXMVIRTGD7E7K6FWMEYQEYXOKEJPEYRRB7HXPSRUAYSI27OITQKHXETSIQE4L7Y3YNHMIKJROBL24DJH3GJUNRXCS6QTMJKJL64DUIZ3LJWAU3GF2PLITSVW7VLXP2GJSMORRXXWAOWSTVCL6QE2UOASGKVCG3AMNN4CIQQQAXMPD3A2PPLQGTSLVPMHZONBKU3A'
       request
          .get('/sales/state/california/?group=color&userID=' + userID)
-         .end(function(err, res) {
+         .end(function (err, res) {
             let response = res.body.data;
             assert.includeMembers(colors, Object.keys(response.pieChart))
             for (var i in response.pieChart) {
@@ -47,11 +49,12 @@ describe('State sales routes', function() {
          });
    });
 
-   it('should get the correct data back from the barChart request', function(done) {
-      var userID = 'amzn1.ask.account.AHNWAHWU4XEGXMVIRTGD7E7K6FWMEYQEYXOKEJPEYRRB7HXPSRUAYSI27OITQKHXETSIQE4L7Y3YNHMIKJROBL24DJH3GJUNRXCS6QTMJKJL64DUIZ3LJWAU3GF2PLITSVW7VLXP2GJSMORRXXWAOWSTVCL6QE2UOASGKVCG3AMNN4CIQQQAXMPD3A2PPLQGTSLVPMHZONBKU3A'
+   it('should get the correct data back from the barChart request', function (done) {
+      var userID =
+         'amzn1.ask.account.AHNWAHWU4XEGXMVIRTGD7E7K6FWMEYQEYXOKEJPEYRRB7HXPSRUAYSI27OITQKHXETSIQE4L7Y3YNHMIKJROBL24DJH3GJUNRXCS6QTMJKJL64DUIZ3LJWAU3GF2PLITSVW7VLXP2GJSMORRXXWAOWSTVCL6QE2UOASGKVCG3AMNN4CIQQQAXMPD3A2PPLQGTSLVPMHZONBKU3A'
       request
          .get('/sales/state/california/?group=color&userID=' + userID)
-         .end(function(err, res) {
+         .end(function (err, res) {
             let response = res.body.data;
             let barChartKeys = Object.keys(response.barChart);
             assert.includeMembers(colors, barChartKeys)
@@ -72,15 +75,16 @@ describe('State sales routes', function() {
          });
    });
 
-
-   it('should get the correct data back from the bubbleChart request', function(done) {
-      var userID = 'amzn1.ask.account.AHNWAHWU4XEGXMVIRTGD7E7K6FWMEYQEYXOKEJPEYRRB7HXPSRUAYSI27OITQKHXETSIQE4L7Y3YNHMIKJROBL24DJH3GJUNRXCS6QTMJKJL64DUIZ3LJWAU3GF2PLITSVW7VLXP2GJSMORRXXWAOWSTVCL6QE2UOASGKVCG3AMNN4CIQQQAXMPD3A2PPLQGTSLVPMHZONBKU3A'
+   it('should get the correct data back from the bubbleChart request', function (done) {
+      var userID =
+         'amzn1.ask.account.AHNWAHWU4XEGXMVIRTGD7E7K6FWMEYQEYXOKEJPEYRRB7HXPSRUAYSI27OITQKHXETSIQE4L7Y3YNHMIKJROBL24DJH3GJUNRXCS6QTMJKJL64DUIZ3LJWAU3GF2PLITSVW7VLXP2GJSMORRXXWAOWSTVCL6QE2UOASGKVCG3AMNN4CIQQQAXMPD3A2PPLQGTSLVPMHZONBKU3A'
       request
          .get('/sales/city/petaluma?group=color&userID=' + userID)
-         .end(function(err, res) {
+         .end(function (err, res) {
             let response = res.body.data;
             let bubbleChartKeys = Object.keys(response.bubbleChart);
-            assert.includeMembers(["0", "1", '2', "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"], bubbleChartKeys)
+            assert.includeMembers(["0", "1", '2', "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+               bubbleChartKeys)
 
             for (var i of bubbleChartKeys) {
                let cur = response.bubbleChart[i]
