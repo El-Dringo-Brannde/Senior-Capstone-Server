@@ -5,7 +5,7 @@ module.exports = class refine extends mongoDB {
       super(mongoDB, collName, null)
    }
 
-   function mergeRoute(req){
+   async mergeRoute(req){
      let user = req.query.userID;
      let lastRequest = await this.find({"userID" : user}).sort({_id: -1}).limit(1);
 
