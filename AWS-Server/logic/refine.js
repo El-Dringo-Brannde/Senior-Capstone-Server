@@ -7,11 +7,11 @@ module.exports = class refine extends mongoDB {
 
    async mergeRoute(req){
      let user = req.query.userID;
-     let lastRequest = await this.find({"userID" : user}).sort({_id: -1}).limit(1);
+     let lastRequest =  await this.findLast(user);
 
-     let mergedRoute = Object.assign({}, lastRequest, req);
-     mergedRoute.params = Object.assign({}, lastRequest.params, req.params);
-     mergedRoute.query = Object.assign({}, lastRequest.query, req.query);
+     let mergedRoute = Object.assign({}, lastRequest[0], req);
+     mergedRoute.params = Object.assign({}, lastRequest[0].params, req.params);
+     mergedRoute.query = Object.assign({}, lastRequest[0].query, req.query);
 
      return mergedRoute;
    }
