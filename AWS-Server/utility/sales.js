@@ -1,5 +1,5 @@
 class salesUtility {
-   constructor() { }
+   constructor() {}
 
    arrayToObject(arr) {
       var rv = {};
@@ -20,7 +20,8 @@ class salesUtility {
          'September',
          'October',
          'November',
-         'December']
+         'December'
+      ]
       return months[monthNumber - 1];
    }
 
@@ -63,7 +64,8 @@ class salesUtility {
    }
 
    findHighestNumbers(data) {
-      let highest = 0, group = '';
+      let highest = 0,
+         group = '';
       for (var i in data.pieChart)
          if (data.pieChart[i] > highest) {
             highest = data.pieChart[i]
@@ -73,7 +75,8 @@ class salesUtility {
    }
 
    findLowestNumbers(data) {
-      let lowest = Math.pow(10, 100), group = '';
+      let lowest = Math.pow(10, 100),
+         group = '';
       for (var i in data.pieChart)
          if (data.pieChart[i] < lowest) {
             lowest = data.pieChart[i]

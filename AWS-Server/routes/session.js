@@ -1,4 +1,5 @@
-var router = require('express').Router();
+var router = require('express')
+   .Router();
 var session = require('./../logic/session');
 
 // All routes here are prefixed by /session

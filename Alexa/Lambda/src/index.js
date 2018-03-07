@@ -1,7 +1,6 @@
 var baseHandler = require('./models/baseHandler');
 // --------------- Main handler -----------------------
 
-
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
 exports.handler = (event, context) => {
