@@ -8,7 +8,7 @@ module.exports = class baseHandler {
       this.onInit();
    }
 
-   onInit() { } // virtual class to be used in children after constructor
+   onInit() {} // virtual class to be used in children after constructor
 
    buildResponse(sessionAttributes, speechletResponse) {
       return {

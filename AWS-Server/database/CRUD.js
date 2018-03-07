@@ -1,4 +1,5 @@
-var mongoObj = require('mongodb').ObjectID;
+var mongoObj = require('mongodb')
+   .ObjectID;
 
 module.exports = class CRUD {
    constructor(mongo, collName, socket) {
@@ -9,10 +10,14 @@ module.exports = class CRUD {
       this.onInit();
    }
 
-   onInit() { } // virtual func
+   onInit() {} // virtual func
 
    async update(selector, updateData) {
-      return await this.db.update(selector, { $set: updateData }, { upsert: true })
+      return await this.db.update(selector, {
+         $set: updateData
+      }, {
+         upsert: true
+      })
    }
 
    async insert(data) {
@@ -20,6 +25,11 @@ module.exports = class CRUD {
    }
 
    async read(query) {
-      return await this.db.find(query).toArray();
+      return await this.db.find(query)
+         .toArray();
+   }
+
+   async findLast(user){
+      return await this.db.find({"userID" : user}).sort({_id: -1}).limit(1).toArray();
    }
 };

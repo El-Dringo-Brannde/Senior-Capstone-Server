@@ -1,17 +1,23 @@
-CITY_VALUE	
-Oakland	
+CITY_VALUE
+Oakland
 
-TYPE_VALUE	
-Sales	
+TYPE_VALUE
+Sales
 
-WHICH_VALUE	
-Apache | Eagle | Brute | Coil | Delta	
+WHICH_VALUE
+Apache | Eagle | Brute | Coil | Delta
 
-TIME_VALUE	
+TIME_VALUE
 2015 | 2016 | 2017
 
-STATE_VALUE	
+STATE_VALUE
 California
 
-SELECTOR_VALUE	
+SELECTOR_VALUE
 brand
+
+VIEW_VALUE
+plot
+map
+show
+get

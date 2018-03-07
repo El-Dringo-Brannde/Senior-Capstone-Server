@@ -11,7 +11,9 @@ module.exports = class state extends mongoDB {
       _.isEmpty(req.body) ? null : updateObj.body = req.body;
       _.isEmpty(req.params) ? null : updateObj.params = req.params;
       _.isEmpty(req.query) ? null : updateObj.query = req.query;
-      return await this.update({ userID: userID }, updateObj)
+      return await this.update({
+         userID: userID
+      }, updateObj)
    }
 
 }

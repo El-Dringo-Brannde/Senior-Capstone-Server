@@ -1,7 +1,8 @@
-var router = require('express').Router();
+var router = require('express')
+   .Router();
 
 // All routes here are prefixed by the /test route
-module.exports = function() {
+module.exports = function () {
    router.use((req, res, next) => next()); // init
 
    router.get('/', (req, res) => {

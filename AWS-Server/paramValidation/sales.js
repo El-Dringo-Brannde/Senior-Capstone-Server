@@ -1,30 +1,88 @@
-var router = require('express').Router();
-var { check, validationResult } = require('express-validator/check');
+var router = require('express')
+   .Router();
+var {
+   check,
+   validationResult
+} = require('express-validator/check');
 let util = require('util');
 
 class salesValidator {
-   constructor() { }
+   constructor() {}
 
    checkResult(req, res) {
       let errors = validationResult(req)
       if (!errors.isEmpty())
          res.json({
-            error: errors.mapped()
+            error: errors.mapped(),
+            speechlet: `I'm sorry, there was an error in your query.`
          })
+   }
+
+   nameCityState() {
+      return [
+         check('city')
+         .exists()
+         .isAlpha(),
+         check('state')
+         .exists()
+         .isAlpha(),
+         check('name')
+         .exists()
+         .isIn([
+            'bobs buggy',
+            'toms toys',
+            'chris cars',
+            'jeffs junkers',
+            'harrys hatchbacks',
+            'chads clunkers',
+            'jims jalopys'
+         ]),
+         check('userID')
+         .isAscii()
+         .exists()
+      ]
+   }
+
+   nameGroupCityState() {
+      return [
+         check('city')
+         .exists()
+         .isAlpha(),
+         check('state')
+         .exists()
+         .isAlpha(),
+         check('group')
+         .exists()
+         .isAlpha(),
+         check('name')
+         .exists()
+         .isIn([
+            'bobs buggy',
+            'toms toys',
+            'chris cars',
+            'jeffs junkers',
+            'harrys hatchbacks',
+            'chads clunkers',
+            'jims jalopys'
+         ]),
+         check('userID')
+         .isAscii()
+         .exists()
+      ]
    }
 
    //Param Validation for state
    state() {
       return [
          check('state')
-            .exists()
-            .isAlpha(),
+         .exists()
+         .isAlpha(),
          check('group')
-            .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
-            .exists(),
+         .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
+         .exists(),
          check('userID')
-            .isAscii()
-            .exists()
+         .isAscii()
+         .exists()
       ] // check against US state array
    }
 
@@ -32,14 +90,14 @@ class salesValidator {
    city() {
       return [
          check('city')
-            .exists()
-            .isAlpha(),
+         .exists()
+         .isAlpha(),
          check('group')
-            .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
-            .exists(),
+         .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
+         .exists(),
          check('userID')
-            .isAscii()
-            .exists()
+         .isAscii()
+         .exists()
       ] // check against US state array
    }
 
@@ -47,17 +105,17 @@ class salesValidator {
    cityState() {
       return [
          check('city')
-            .exists()
-            .isAlpha(),
+         .exists()
+         .isAlpha(),
          check('state')
-            .exists()
-            .isAlpha(),
+         .exists()
+         .isAlpha(),
          check('group')
-            .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
-            .exists(),
+         .isIn(['color', 'name', 'age', 'model', 'brand', 'price', 'date', 'license'])
+         .exists(),
          check('userID')
-            .isAscii()
-            .exists()
+         .isAscii()
+         .exists()
       ] // check against US state array
    }
 }
