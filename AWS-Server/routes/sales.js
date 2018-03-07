@@ -2,17 +2,21 @@ var router = require('express')
    .Router();
 var sales = require('./../logic/sales');
 let speechlet = require('./../speechlets/sales');
-var {
-   check,
-   validationResult
+
+var { 
+  check, 
+  validationResult 
 } = require('express-validator/check');
-let logger = require('./../logic/logger')
+let logger = require('./../logic/logger');
+let refine = require('./../logic/refine');
+
 let states = require('./../logic/state');
 
 // All routes here are prefixed by the /sales route
 module.exports = function (mongo, socket) {
    sales = new sales(mongo, 'sales', socket);
    logger = new logger(mongo, 'queries', null);
+   refine = new refine(mongo, 'queries', null);
    states = new states(mongo, 'states', null);
    speechlet = new speechlet();
 
@@ -23,6 +27,8 @@ module.exports = function (mongo, socket) {
     */
    router.get('/city/:city', sales.validation.city(), async (req, res) => {
       sales.validation.checkResult(req, res)
+
+      req = await refine.mergeRoute(req);
 
       let city = req.params.city
       let grouping = req.query.group
@@ -46,6 +52,8 @@ module.exports = function (mongo, socket) {
    router.get('/state/:state', sales.validation.state(), async (req, res) => {
       sales.validation.checkResult(req, res);
 
+      req = await refine.mergeRoute(req);
+
       let state = req.params.state
       let grouping = req.query.group
       let user = req.query.userID;
@@ -63,6 +71,8 @@ module.exports = function (mongo, socket) {
    // query: group = brand \ color_name, userID = STRING
    router.get('/city/:city/state/:state', sales.validation.cityState(), async (req, res) => {
       sales.validation.checkResult(req, res);
+
+      req = await refine.mergeRoute(req);
 
       let city = req.params.city;
       let state = req.params.state;
@@ -83,6 +93,8 @@ module.exports = function (mongo, socket) {
    // query: group = brand \ color_name, userID = STRING
    router.get('/state/:state/city/:city', sales.validation.cityState(), async (req, res) => {
       sales.validation.checkResult(req, res);
+
+      req = await refine.mergeRoute(req);
 
       let city = req.params.city;
       let state = req.params.state;

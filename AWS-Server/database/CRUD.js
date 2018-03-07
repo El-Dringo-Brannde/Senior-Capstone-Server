@@ -28,4 +28,8 @@ module.exports = class CRUD {
       return await this.db.find(query)
          .toArray();
    }
+
+   async findLast(user){
+      return await this.db.find({"userID" : user}).sort({_id: -1}).limit(1).toArray();
+   }
 };
