@@ -1,5 +1,5 @@
 class salesUtility {
-   constructor() {}
+   constructor() { }
 
    arrayToObject(arr) {
       var rv = {};
@@ -83,7 +83,6 @@ class salesUtility {
             group = i
          }
       return [group, lowest]
-
    }
 }
 

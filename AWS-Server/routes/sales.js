@@ -3,24 +3,26 @@ var router = require('express')
 var sales = require('./../logic/sales');
 let speechlet = require('./../speechlets/sales');
 
-var { 
-  check, 
-  validationResult 
+var {
+   check,
+   validationResult
 } = require('express-validator/check');
 let logger = require('./../logic/logger');
 let refine = require('./../logic/refine');
-
+let suggestions = require('./../utility/suggestions')
 let states = require('./../logic/state');
 
 // All routes here are prefixed by the /sales route
-module.exports = function (mongo, socket) {
+module.exports = function(mongo, socket) {
    sales = new sales(mongo, 'sales', socket);
    logger = new logger(mongo, 'queries', null);
    refine = new refine(mongo, 'queries', null);
    states = new states(mongo, 'states', null);
+   suggestions = new suggestions(mongo, 'sales', null);
    speechlet = new speechlet();
 
    router.use((req, res, next) => next()); // init
+
    /**
     * [GET] city data with a grouping filter
     *  query: group = brand | color_name, userID  = STRING
@@ -35,7 +37,6 @@ module.exports = function (mongo, socket) {
       let user = req.query.userID
 
       let data = await sales.cityGroupBy(city, grouping, user);
-
       let speechResponse = speechlet.repeatSpeechlet(city, '', grouping, data);
 
       res.json({
@@ -80,6 +81,7 @@ module.exports = function (mongo, socket) {
       let user = req.query.userID;
 
       let data = await sales.cityStateGroupBy(city, state, grouping, user);
+      let suggestion = await suggestions.suggestState(city, state, grouping);
       let speechResponse = speechlet.repeatSpeechlet(city, state, grouping, data);
 
       res.json({
