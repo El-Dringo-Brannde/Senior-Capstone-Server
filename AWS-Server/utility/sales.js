@@ -1,5 +1,5 @@
 class salesUtility {
-   constructor() { }
+   constructor() {}
 
    arrayToObject(arr) {
       var rv = {};

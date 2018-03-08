@@ -1,10 +1,8 @@
-
 // because I can't do complicated stuff in MongoDB
 module.exports = class suggestionLogic {
-   constructor() { }
+   constructor() {}
 
-
-   sumGroupSalesWithinCity(stateCities, grouping) {
+   sumGroupSalesWithinState(stateCities, grouping) {
       let obj = {}
       for (let city of stateCities) {
          let cityName = city.city
@@ -20,7 +18,24 @@ module.exports = class suggestionLogic {
       return obj
    }
 
-   sumBrandsThroughoutCities(cities) {
+   sumGroupSalesWithinCity(city, grouping) {
+      let obj = {}
+      for (const dealership of city.dealerships)
+         obj[dealership.name] = {};
+      for (const sale of city.sales)
+         obj[sale.dealership][sale[grouping]] = {
+            sum: 0,
+            count: 0
+         }
+
+      for (const sale of city.sales) {
+         obj[sale.dealership][sale[grouping]].sum += sale.price
+         obj[sale.dealership][sale[grouping]].count += 1
+      }
+      return obj
+   }
+
+   sumGroupsThroughoutCities(cities) {
       let obj = {};
       for (const city in cities) {
          let cur = cities[city]
@@ -39,7 +54,19 @@ module.exports = class suggestionLogic {
       return obj
    }
 
-   avgBrands(groups) {
+   avgGroupsWithinCity(summedDealerships) {
+      let obj = {}
+      for (const i in summedDealerships) {
+         let dealership = summedDealerships[i]
+         for (const j in dealership) {
+            let brand = dealership[j]
+            obj[j] = brand.sum / brand.count
+         }
+      }
+      return obj
+   }
+
+   avgGroupsThroughoutState(groups) {
       let obj = {};
       for (const group in groups) {
          let cur = groups[group]
@@ -54,10 +81,13 @@ module.exports = class suggestionLogic {
       for (const group in groups) {
          let cur = groups[group]
          if (cur > lastHigh) {
-            highest = { [group]: cur }
+            highest = {
+               [group]: cur
+            }
             lastHigh = cur
          }
       }
+      return highest
    }
 
    findLowest(groups) {
@@ -66,9 +96,12 @@ module.exports = class suggestionLogic {
       for (const group in groups) {
          let cur = groups[group]
          if (cur < lastLow) {
-            lowest = { [group]: cur }
+            lowest = {
+               [group]: cur
+            }
             lastLow = cur
          }
       }
+      return lowest
    }
 }
