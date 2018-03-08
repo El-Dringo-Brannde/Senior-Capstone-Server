@@ -4,5 +4,12 @@ Capstone {view} {type} by {group} in {state}
 Capstone show me {type} by {group} in {city} {state}
 Capstone show me {type} by {group} in {city}
 Capstone show me {type} by {group} in {state}
+
+Capstone {reset} {view} {type} by {group} in {city} {state}
+Capstone {reset} {view} {type} by {group} in {city}
+Capstone {reset} {view} {type} by {group} in {state}
+Capstone {reset} search for {type} by {group} in {city} {state}
+Capstone {reset} search for {type} by {group} in {city}
+Capstone {reset} search for {type} by {group} in {state}
 AMAZON.HelpIntent open
 AMAZON.StopIntent exit
