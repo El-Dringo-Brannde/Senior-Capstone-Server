@@ -21,3 +21,6 @@ plot
 map
 show
 get
+
+RESET_VALUE
+new
