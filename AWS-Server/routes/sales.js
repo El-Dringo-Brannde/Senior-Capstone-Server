@@ -13,7 +13,7 @@ let suggestions = require('./../utility/suggestions')
 let states = require('./../logic/state');
 
 // All routes here are prefixed by the /sales route
-module.exports = function (mongo, socket) {
+module.exports = function(mongo, socket) {
    sales = new sales(mongo, 'sales', socket);
    logger = new logger(mongo, 'queries', null);
    refine = new refine(mongo, 'queries', null);
@@ -83,6 +83,7 @@ module.exports = function (mongo, socket) {
       let data = await sales.cityStateGroupBy(city, state, grouping, user);
       let stateAvg = await suggestions.avgInState(city, state, grouping);
       let speechResponse = speechlet.repeatSpeechlet(city, state, grouping, data);
+      speechResponse = speechlet.addSimilarStats(stateAvg, speechResponse);
 
       res.json({
          data: data,
@@ -104,7 +105,9 @@ module.exports = function (mongo, socket) {
       let user = req.query.userID;
 
       let data = await sales.cityStateGroupBy(city, state, grouping, user);
+      let stateAvg = await suggestions.avgInState(city, state, grouping);
       let speechResponse = speechlet.repeatSpeechlet(city, state, grouping, data);
+      speechResponse = speechlet.addSimilarStats(stateAvg, speechResponse);
 
       res.json({
          data: data,
@@ -139,6 +142,7 @@ module.exports = function (mongo, socket) {
       let result = await sales.mapCityStateGroupBy(city, state, group, name, user)
       let cityAvg = await suggestions.avgInCity(city, state, group, name)
       let speechResponse = speechlet.repeatDealershipSpeechlet(city, state, name, group, result);
+      speechResponse = speechlet.addSimilarStats(cityAvg, speechResponse);
       res.json({
          data: result,
          speechlet: speechResponse
