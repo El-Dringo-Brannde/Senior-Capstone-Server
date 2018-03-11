@@ -30,15 +30,23 @@ module.exports = class baseRoutes {
    buildQueryString(intentSlots) {
       var route = '';
       var query = intentSlots.type.value + '/';
+      var reset = '';
       delete intentSlots.type
 
       for (var i in intentSlots) {
          let cur = intentSlots[i];
-         if (cur && cur.value && cur.name != 'group')
+         if(cur && cur.value && cur.name == 'reset'){
+           reset = cur.value.toLowerCase();
+         }
+         else if (cur && cur.value && cur.name != 'group' && cur.name != 'reset')
             query += cur.name.toLowerCase() + '/' + cur.value.toLowerCase() + '/'
-         if (cur && cur.value && cur.name == 'group')
+         else if (cur && cur.value && cur.name == 'group')
             query += '?' + cur.name.toLowerCase() + '=' + cur.value.toLowerCase() + '&';
       }
+
+      if(reset != '')
+        query += reset + '&';
+      console.log(query);
       return query;
    }
 
