@@ -21,6 +21,10 @@
         {
           "name": "group",
           "type": "GROUP_VALUE"
+        },
+        {
+          "name": "reset",
+          "type": "RESET_VALUE"
         }
       ],
       "intent": "Capstone"
