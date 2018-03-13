@@ -35,8 +35,8 @@ module.exports = class baseRoutes {
 
       for (var i in intentSlots) {
          let cur = intentSlots[i];
-         if(cur && cur.value && cur.name == 'reset'){
-           reset = cur.value.toLowerCase();
+         if (cur && cur.value && cur.name == 'reset') {
+            reset = cur.value.toLowerCase();
          }
          else if (cur && cur.value && cur.name != 'group' && cur.name != 'reset')
             query += cur.name.toLowerCase() + '/' + cur.value.toLowerCase() + '/'
@@ -44,9 +44,9 @@ module.exports = class baseRoutes {
             query += '?' + cur.name.toLowerCase() + '=' + cur.value.toLowerCase() + '&';
       }
 
-      if(reset != '')
-        query += reset + '&';
-      console.log(query);
+      if (reset != '')
+         query += reset + '&';
+
       return query;
    }
 
@@ -70,7 +70,7 @@ module.exports = class baseRoutes {
             });
       } else
          this.rp(this.serverURL + 'sales/home')
-         .then(resp => console.log(resp));
+            .then(resp => console.log(resp));
    }
 
    pullMapViewParams(intents, userID) {
@@ -91,5 +91,5 @@ module.exports = class baseRoutes {
          });
    }
 
-   logRoute() {} // implement logic to log route here
+   logRoute() { } // implement logic to log route here
 }

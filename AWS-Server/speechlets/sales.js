@@ -13,7 +13,7 @@ module.exports = class salesSpeechlet {
 
       speechlet +=
          `The highest selling ${grouping} was ${highest[0]} with ${parseInt(highest[1])} dollars. `;
-      speechlet += `While the lowest selling ${grouping} was ${lowest[0]} with ${parseInt(lowest[1])} dollars.`;
+      speechlet += `While the lowest was ${lowest[0]} with ${parseInt(lowest[1])}.`;
       return speechlet;
    }
 
@@ -26,8 +26,8 @@ module.exports = class salesSpeechlet {
       let lowest = utility.findLowestNumbers(data);
 
       speechlet +=
-         `The highest selling ${grouping} was ${highest[0]} with ${parseInt(highest[1])} dollars. `;
-      speechlet += `While the lowest selling ${grouping} was ${lowest[0]} with ${parseInt(lowest[1])} dollars.`;
+         `The highest selling ${grouping} was ${highest[0]} with ${parseInt(highest[1])}. `;
+      speechlet += `While the lowest was ${lowest[0]} with ${parseInt(lowest[1])}.`;
       return speechlet;
    }
 

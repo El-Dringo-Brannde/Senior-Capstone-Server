@@ -9,7 +9,7 @@ var {
 } = require('express-validator/check');
 let logger = require('./../logic/logger');
 let refine = require('./../logic/refine');
-let suggestions = require('./../utility/suggestions')
+let compare = require('./../utility/compare')
 let states = require('./../logic/state');
 
 // All routes here are prefixed by the /sales route
@@ -18,7 +18,7 @@ module.exports = function(mongo, socket) {
    logger = new logger(mongo, 'queries', null);
    refine = new refine(mongo, 'queries', null);
    states = new states(mongo, 'states', null);
-   suggestions = new suggestions(mongo, 'sales', null);
+   compare = new compare(mongo, 'sales', null);
    speechlet = new speechlet();
 
    router.use((req, res, next) => next()); // init
@@ -81,7 +81,7 @@ module.exports = function(mongo, socket) {
       let user = req.query.userID;
 
       let data = await sales.cityStateGroupBy(city, state, grouping, user);
-      let stateAvg = await suggestions.avgInState(city, state, grouping);
+      let stateAvg = await compare.avgInState(city, state, grouping);
       let speechResponse = speechlet.repeatSpeechlet(city, state, grouping, data);
       speechResponse = speechlet.addSimilarStats(stateAvg, speechResponse);
 
@@ -96,7 +96,6 @@ module.exports = function(mongo, socket) {
    // query: group = brand \ color_name, userID = STRING
    router.get('/state/:state/city/:city', sales.validation.cityState(), async (req, res) => {
       sales.validation.checkResult(req, res);
-
       req = await refine.mergeRoute(req);
 
       let city = req.params.city;
@@ -105,7 +104,7 @@ module.exports = function(mongo, socket) {
       let user = req.query.userID;
 
       let data = await sales.cityStateGroupBy(city, state, grouping, user);
-      let stateAvg = await suggestions.avgInState(city, state, grouping);
+      let stateAvg = await compare.avgInState(city, state, grouping);
       let speechResponse = speechlet.repeatSpeechlet(city, state, grouping, data);
       speechResponse = speechlet.addSimilarStats(stateAvg, speechResponse);
 
@@ -140,13 +139,15 @@ module.exports = function(mongo, socket) {
       let group = req.query.group
 
       let result = await sales.mapCityStateGroupBy(city, state, group, name, user)
-      let cityAvg = await suggestions.avgInCity(city, state, group, name)
+      let cityAvg = await compare.avgInCity(city, state, group, name)
       let speechResponse = speechlet.repeatDealershipSpeechlet(city, state, name, group, result);
       speechResponse = speechlet.addSimilarStats(cityAvg, speechResponse);
       res.json({
          data: result,
          speechlet: speechResponse
       });
+
+      logAndUpdate(req, user)
    });
 
    // used to change the view in the VR environment
