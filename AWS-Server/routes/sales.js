@@ -84,12 +84,15 @@ module.exports = function(mongo, socket) {
       let stateAvg = await compare.avgInState(city, state, grouping);
       let speechResponse = speechlet.repeatSpeechlet(city, state, grouping, data);
       speechResponse = speechlet.addSimilarStats(stateAvg, speechResponse);
+      let { suggestion } = await logAndUpdate(req, user)
+      speechResponse = speechlet.addSuggestion(suggestion, speechResponse)
+
 
       res.json({
          data: data,
          speechlet: speechResponse
       })
-      logAndUpdate(req, user)
+      // logAndUpdate(req, user)
    });
 
    // [GET] city state data with a grouping filter
@@ -108,11 +111,14 @@ module.exports = function(mongo, socket) {
       let speechResponse = speechlet.repeatSpeechlet(city, state, grouping, data);
       speechResponse = speechlet.addSimilarStats(stateAvg, speechResponse);
 
+      let { suggestion } = await logAndUpdate(req, user)
+      speechResponse = speechlet.addSuggestion(suggestion, speechResponse)
+
       res.json({
          data: data,
          speechlet: speechResponse
       })
-      logAndUpdate(req, user)
+
    });
 
    //switch TO map view, don't populate data just yet.
@@ -142,12 +148,12 @@ module.exports = function(mongo, socket) {
       let cityAvg = await compare.avgInCity(city, state, group, name)
       let speechResponse = speechlet.repeatDealershipSpeechlet(city, state, name, group, result);
       speechResponse = speechlet.addSimilarStats(cityAvg, speechResponse);
+      let { suggestion } = await logAndUpdate(req, user)
+      speechResponse = speechlet.addSuggestion(suggestion, speechResponse)
       res.json({
          data: result,
          speechlet: speechResponse
       });
-
-      logAndUpdate(req, user)
    });
 
    // used to change the view in the VR environment
@@ -159,8 +165,9 @@ module.exports = function(mongo, socket) {
    });
 
    function logAndUpdate(req, user) {
-      logger.logRoute(req, user);
+      let lastQuery = logger.logRoute(req, user);
       states.updateState(req, user);
+      return lastQuery
    }
    return router;
 };

@@ -12,11 +12,13 @@ module.exports = class logger extends mongoDB {
       let lastQuery = {
          userID: userID
       };
+
       _.isEmpty(req.body) ? null : lastQuery.body = req.body;
       _.isEmpty(req.params) ? null : lastQuery.params = req.params;
       _.isEmpty(req.query) ? null : lastQuery.query = req.query;
 
       lastQuery = this.suggest.createSuggestion(lastQuery);
-      return await this.insert(lastQuery)
+      let inserted = await this.insert(lastQuery)
+      return inserted.ops[0]
    }
 }

@@ -12,8 +12,8 @@ module.exports = class salesSpeechlet {
       let lowest = utility.findLowestNumbers(data);
 
       speechlet +=
-         `The highest selling ${grouping} was ${highest[0]} with ${parseInt(highest[1])} dollars. `;
-      speechlet += `While the lowest was ${lowest[0]} with ${parseInt(lowest[1])}.`;
+         `The highest selling ${grouping} was ${highest[0]} with ${parseInt(highest[1])} dollars, `;
+      speechlet += `and the lowest was ${lowest[0]} with ${parseInt(lowest[1])}.`;
       return speechlet;
    }
 
@@ -42,6 +42,20 @@ module.exports = class salesSpeechlet {
       speechResponse.pop()
       speechResponse.pop()
       speechResponse = speechResponse.join(' ')
+      speechResponse += '.'
+      return speechResponse
+   }
+
+   addSuggestion(suggestion, speechResponse) { //getting sloppy..
+      let params = suggestion.params
+      let smashParams = ''
+      if (params.name)
+         smashParams += `${params.name} for `
+      if (params.city)
+         smashParams += `${params.city}, `
+      smashParams += `${params.state}`
+
+      speechResponse += ` Would you like to see sales by ${suggestion.query.group} in ${smashParams}?`
       return speechResponse
    }
 
