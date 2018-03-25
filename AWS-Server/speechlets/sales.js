@@ -59,4 +59,8 @@ module.exports = class salesSpeechlet {
       return speechResponse
    }
 
+   acceptSuggestion() {
+
+   }
+
 }

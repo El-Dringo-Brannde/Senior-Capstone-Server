@@ -11,6 +11,7 @@ let logger = require('./../logic/logger');
 let refine = require('./../logic/refine');
 let compare = require('./../utility/compare')
 let states = require('./../logic/state');
+let suggestion = require('./../database/mongoDB');
 
 // All routes here are prefixed by the /sales route
 module.exports = function(mongo, socket) {
@@ -19,6 +20,7 @@ module.exports = function(mongo, socket) {
    refine = new refine(mongo, 'queries', null);
    states = new states(mongo, 'states', null);
    compare = new compare(mongo, 'sales', null);
+   suggestion = new suggestion(mongo, 'queries', null)
    speechlet = new speechlet();
 
    router.use((req, res, next) => next()); // init
@@ -154,6 +156,16 @@ module.exports = function(mongo, socket) {
          data: result,
          speechlet: speechResponse
       });
+   });
+
+   router.get('/last/user/:userID', async (req, res) => {
+      let suggested = await suggestion.getSuggestion(req.params.userID)
+      console.log(suggested)
+      // let speechResponse = speechlet
+      res.json({
+         data: suggested,
+         speechlet: speechResponse
+      })
    });
 
    // used to change the view in the VR environment

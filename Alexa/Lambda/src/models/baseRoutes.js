@@ -7,14 +7,37 @@ module.exports = class baseRoutes {
       this.rp = require('request-promise');
    }
 
+   checkSuggestion(intent, userID) {
+      return new Promise((res, rej) => {
+         // console.log(intent, userID, this.serverURL + 'last/user/' + userID)
+         this.rp(this.serverURL + 'sales/last/user/' + userID)
+            .then(data => res(data))
+            .catch(data => res(data))
+      })
+   }
+
    // entry point to parsing routes
    parseRoute(intent, userID, callback) {
       const intentName = intent.name;
       let response = this.changeView(intent, userID, intentName, callback)
-      if (intent.slots.view.value == 'map')
+
+      if (intent.slots.suggestion.value == 'yes') {
+         this.checkSuggestion(intent, userID)
+            .then(resp => {
+               delete intent.slots.view
+               delete intent.slots.suggestion
+               console.log(resp)
+               let route = this.buildQueryString(intent.slots)
+               let sessionQuery = 'userID' + '=' + userID
+               // this.sendRequest(route, sessionQuery, intentName, callback)
+               this.sendBackReturnedData(intentName, resp.data[0], callback)
+            })
+      }
+      else if (intent.slots.view.value == 'map')
          return
       else {
          delete intent.slots.view
+         delete intent.slots.suggestion
          let route = this.buildQueryString(intent.slots)
          let sessionQuery = 'userID' + '=' + userID
          this.sendRequest(route, sessionQuery, intentName, callback)
