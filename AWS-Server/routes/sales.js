@@ -158,13 +158,17 @@ module.exports = function(mongo, socket) {
       });
    });
 
+   //accept a suggestion
    router.get('/last/user/:userID', async (req, res) => {
       let suggested = await suggestion.getSuggestion(req.params.userID)
-      console.log(suggested)
-      // let speechResponse = speechlet
+      suggested = suggested[0].suggestion
+      suggested = await sales.parseSuggestion(suggested.params, suggested.query)
+
+      // sales.parseSuggestion(suggest)
+
       res.json({
-         data: suggested,
-         speechlet: speechResponse
+         data: suggested.data,
+         speechlet: suggested.speech
       })
    });
 

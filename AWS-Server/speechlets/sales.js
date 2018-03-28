@@ -58,9 +58,4 @@ module.exports = class salesSpeechlet {
       speechResponse += ` Would you like to see sales by ${suggestion.query.group} in ${smashParams}?`
       return speechResponse
    }
-
-   acceptSuggestion() {
-
-   }
-
 }
