@@ -1,41 +1,42 @@
-let mongo = require('./../database/mongoDB');
-let util = require('./suggestionLogic');
-
-//hackety hack
-module.exports = class suggestions extends mongo {
-   constructor(mongo, collection, socket) {
-      super(mongo, collection, socket);
-      this.util = new util();
+module.exports = class suggestion {
+   constructor() {
    }
 
-   async avgInState(city, state, grouping) {
-      let stateCities = await this.read({
-         state: state
-      })
-      let summedCities = this.util.sumGroupSalesWithinState(stateCities, grouping);
-      let summedGroups = this.util.sumGroupsThroughoutCities(summedCities);
-      let averagedGroups = this.util.avgGroupsThroughoutState(summedGroups);
-      let highest = this.util.findHighest(averagedGroups)
-      let lowest = this.util.findLowest(averagedGroups)
-      return {
-         highest: highest,
-         lowest: lowest
+   randomSuggestion(lastQuery) {
+      let logObj = { query: lastQuery, time: new Date() }
+      let TF = parseInt(Math.random() * 10 + 1) % 2
+
+      if (TF == false && lastQuery.params.city)
+         logObj.suggestion = this.regionalSuggestion(lastQuery)
+      else
+         logObj.suggestion = this.flipGroup(lastQuery)
+
+
+      return logObj
+   } // this is bad.. but atleast it offers suggestions
+
+   flipGroup(lastQuery) {
+      let suggestionQuery = JSON.parse(JSON.stringify(lastQuery))
+      if (suggestionQuery.query.group == 'color')
+         suggestionQuery.query.group = 'brand'
+      else
+         suggestionQuery.query.group = 'color'
+      return suggestionQuery
+   } // need to de-hard code this in the future for more groups.
+
+   createSuggestion(lastQuery) {
+      return this.randomSuggestion(lastQuery)
+   }
+
+   regionalSuggestion(lastQuery) {
+      let suggestionQuery = JSON.parse(JSON.stringify(lastQuery))
+      if (suggestionQuery.params.name) {
+         delete suggestionQuery.params.name
+         return suggestionQuery
       }
-   }
-
-   async avgInCity(city, state, group, name) {
-      let cityDealerships = await this.read({
-         city: city,
-         state: state
-      })
-      let summedDealerships = this.util.sumGroupSalesWithinCity(cityDealerships[0], group)
-      let avgGroups = this.util.avgGroupsWithinCity(summedDealerships)
-      let highest = this.util.findHighest(avgGroups)
-      let lowest = this.util.findLowest(avgGroups)
-
-      return {
-         highest: highest,
-         lowest: lowest
+      if (suggestionQuery.params.city) {
+         delete suggestionQuery.params.city
+         return suggestionQuery
       }
    }
 }
