@@ -1,6 +1,6 @@
-let mongoDB = require('./../database/mongoDB')
+let mongoDB = require('./../../database/mongoDB')
 let _ = require('lodash')
-let suggest = require('./../utility/suggestions')
+let suggest = require('./suggestions')
 
 module.exports = class logger extends mongoDB {
    constructor(mongoDB, collName) {

@@ -1,8 +1,8 @@
-let mongo = require('./../database/mongoDB');
+let mongo = require('./../../database/mongoDB');
 let util = require('./compareLogic');
 
 //hackety hack
-module.exports = class suggestions extends mongo {
+module.exports = class compareSales extends mongo {
    constructor(mongo, collection, socket) {
       super(mongo, collection, socket);
       this.util = new util();

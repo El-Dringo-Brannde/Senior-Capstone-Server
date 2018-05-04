@@ -1,17 +1,17 @@
 var router = require('express')
    .Router();
-var sales = require('./../logic/sales');
-let speechlet = require('./../speechlets/sales');
+var sales = require('./logic');
+let speechlet = require('./speechlet');
 
 var {
    check,
    validationResult
 } = require('express-validator/check');
-let logger = require('./../logic/logger');
-let refine = require('./../logic/refine');
-let compare = require('./../utility/compare')
-let states = require('./../logic/state');
-let suggestion = require('./../database/mongoDB');
+let logger = require('./../states/logger');
+let refine = require('./../states/refine');
+let compare = require('./compare')
+let states = require('./../states/state');
+let suggestion = require('./../../database/mongoDB');
 
 // All routes here are prefixed by the /sales route
 module.exports = function(mongo, socket) {

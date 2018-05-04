@@ -1,4 +1,4 @@
-let utility = require('./../utility/sales');
+let utility = require('./utility');
 let _ = require('lodash')
 module.exports = class salesSpeechlet {
    constructor() { }

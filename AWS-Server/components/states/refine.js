@@ -1,4 +1,4 @@
-let mongoDB = require('./../database/mongoDB')
+let mongoDB = require('./../../database/mongoDB')
 
 module.exports = class refine extends mongoDB {
    constructor(mongoDB, collName) {

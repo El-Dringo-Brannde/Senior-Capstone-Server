@@ -1,4 +1,4 @@
-let crud = require('./../database/CRUD');
+let crud = require('./CRUD');
 
 class mongoDB extends crud {
    constructor(mongo, collName, socket) {
@@ -29,8 +29,6 @@ class mongoDB extends crud {
          res(result)
       })
    }
-
-
 }
 
 module.exports = mongoDB;

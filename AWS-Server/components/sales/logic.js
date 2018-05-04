@@ -1,9 +1,10 @@
-let salesAgg = require('./../aggregations/sales');
-let mongo = require('./../database/mongoDB');
-let salesUtility = require('./../utility/sales');
-let validation = require('./../paramValidation/sales');
-let compare = require('./../utility/compare')
-let speechlet = require('./../speechlets/sales');
+let mongo = require('./../../database/mongoDB');
+
+let salesAgg = require('./aggregations');
+let salesUtility = require('./utility');
+let validation = require('./paramValidation');
+let compare = require('./compare')
+let speechlet = require('./speechlet');
 
 
 module.exports = class sales extends mongo {
