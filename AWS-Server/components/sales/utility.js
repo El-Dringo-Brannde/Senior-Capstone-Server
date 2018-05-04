@@ -83,7 +83,6 @@ class salesUtility {
             group = i
          }
       return [group, lowest]
-
    }
 }
 

@@ -1,8 +1,0 @@
-Capstone {view} {type} by {group} in {city} {state}
-Capstone {view} {type} by {group} in {city}
-Capstone {view} {type} by {group} in {state}
-Capstone show me {type} by {group} in {city} {state}
-Capstone show me {type} by {group} in {city}
-Capstone show me {type} by {group} in {state}
-AMAZON.HelpIntent open
-AMAZON.StopIntent exit

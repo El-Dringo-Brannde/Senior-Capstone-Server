@@ -1,7 +1,11 @@
-let salesAgg = require('./../aggregations/sales');
-let mongo = require('./../database/mongoDB');
-let salesUtility = require('./../utility/sales');
-let validation = require('./../paramValidation/sales');
+let mongo = require('./../../database/mongoDB');
+
+let salesAgg = require('./aggregations');
+let salesUtility = require('./utility');
+let validation = require('./paramValidation');
+let compare = require('./compare')
+let speechlet = require('./speechlet');
+
 
 module.exports = class sales extends mongo {
    constructor(mongo, collName, socket) {
@@ -9,6 +13,8 @@ module.exports = class sales extends mongo {
       this.aggregateBuilder = new salesAgg(mongo, collName, socket);
       this.utility = salesUtility;
       this.validation = validation;
+      this.compare = new compare(mongo, 'sales', null);
+      this.speechlet = new speechlet();
    }
 
    async cityGroupBy(city, grouping, user) {
@@ -130,6 +136,37 @@ module.exports = class sales extends mongo {
 
       this.socketIO.socket.emit('map', result[0]);
       return result
+   }
+
+   async parseSuggestion(params, query) {
+      if (params.name) {
+         let result = await this.mapCityStateGroupBy(params.city, params.state, query.group, params.name, query.userID)
+         let cityAvg = await this.compare.avgInCity(params.city, params.state, query.group, params.name)
+         let speechResponse = this.speechlet.repeatDealershipSpeechlet(params.city, params.state, params.name, query.group, result);
+         speechResponse = this.speechlet.addSimilarStats(cityAvg, speechResponse);
+         return {
+            data: result,
+            speech: speechResponse
+         }
+      }
+      if (params.city) {
+         let data = await this.cityStateGroupBy(params.city, params.state, query.group, query.userID);
+         let stateAvg = await this.compare.avgInState(params.city, params.state, query.group);
+         let speechResponse = this.speechlet.repeatSpeechlet(params.city, params.state, query.group, data);
+         speechResponse = this.speechlet.addSimilarStats(stateAvg, speechResponse);
+         return {
+            data: data,
+            speech: speechResponse
+         }
+      }
+      if (params.state) {
+         let data = await this.stateGroupBy(params.state, query.group, query.userID);
+         let speechResponse = this.speechlet.repeatSpeechlet('', params.state, query.group, data);
+         return {
+            data: data,
+            speech: speechResponse
+         }
+      }
    }
 
    emitter(barObj, pieObj, bubbleObj) {

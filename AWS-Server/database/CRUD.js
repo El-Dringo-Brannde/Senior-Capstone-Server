@@ -29,7 +29,14 @@ module.exports = class CRUD {
          .toArray();
    }
 
-   async findLast(user){
-      return await this.db.find({"userID" : user}).sort({_id: -1}).limit(1).toArray();
+   async findLast(user) {
+      return await this.db.find({
+            "userID": user
+         })
+         .sort({
+            _id: -1
+         })
+         .limit(1)
+         .toArray();
    }
 };
