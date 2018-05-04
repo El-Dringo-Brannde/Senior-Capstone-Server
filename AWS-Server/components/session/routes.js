@@ -1,6 +1,6 @@
 var router = require('express')
    .Router();
-var session = require('./../logic/session');
+var session = require('./logic');
 
 // All routes here are prefixed by /session
 module.exports = () => {

@@ -1,4 +1,4 @@
-let crud = require('./../database/CRUD');
+let crud = require('./CRUD');
 
 class mongoDB extends crud {
    constructor(mongo, collName, socket) {
@@ -14,6 +14,20 @@ class mongoDB extends crud {
                res(data)
             });
       });
+   }
+
+   getSuggestion(userID) {
+      return new Promise(async (res, rej) => {
+         let result = await this.db.find({
+            "query.userID": userID
+         })
+            .sort({
+               _id: -1
+            })
+            .limit(1)
+            .toArray();
+         res(result)
+      })
    }
 }
 

@@ -1,4 +1,4 @@
-let mongoDB = require('./../database/mongoDB')
+let mongoDB = require('./../../database/mongoDB')
 let _ = require('lodash')
 
 module.exports = class state extends mongoDB {
