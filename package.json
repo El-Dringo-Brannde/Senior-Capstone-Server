@@ -6,7 +6,8 @@
    "scripts": {
       "start-server": "node AWS-Server index.js",
       "format": "find ./Alexa/Lambda/src -name '*.js' | xargs js-beautify --config ./format/JSBeautifySettings.json --replace && find ./AWS-Server -name '*.js' | xargs js-beautify --config ./format/JSBeautifySettings.json --replace",
-      "test": "mocha AWS-Server/test/**/*.js"
+      "test": "mocha AWS-Server/test/**/*.js",
+      "dev": "nodemon AWS-Server/index.js"
    },
    "repository": {
       "type": "git",
@@ -18,7 +19,9 @@
       "url": "https://github.com/El-Dringo-Brannde/Senior-Capstone-Server/issues"
    },
    "homepage": "https://github.com/El-Dringo-Brannde/Senior-Capstone-Server#readme",
-   "devDependencies": {},
+   "devDependencies": {
+      "nodemon": "^1.17.3"
+   },
    "dependencies": {
       "assert": "^1.4.1",
       "chai": "^4.1.2",
