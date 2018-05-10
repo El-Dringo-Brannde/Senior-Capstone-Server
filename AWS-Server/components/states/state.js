@@ -1,3 +1,9 @@
+/**
+ * Module for logging the current state of the user to provide the
+ * ability to pick uip where they left off it their session is
+ * ended too early
+ */
+
 let mongoDB = require('./../../database/mongoDB')
 let _ = require('lodash')
 
