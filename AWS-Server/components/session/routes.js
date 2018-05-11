@@ -1,3 +1,6 @@
+/**
+ * Module contining the route to create a new sesion
+ */
 var router = require('express')
    .Router();
 var session = require('./logic');

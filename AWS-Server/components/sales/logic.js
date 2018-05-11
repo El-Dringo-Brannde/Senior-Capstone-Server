@@ -6,7 +6,6 @@ let validation = require('./paramValidation');
 let compare = require('./compare')
 let speechlet = require('./speechlet');
 
-
 module.exports = class sales extends mongo {
    constructor(mongo, collName, socket) {
       super(mongo, collName, socket);
@@ -16,7 +15,14 @@ module.exports = class sales extends mongo {
       this.compare = new compare(mongo, 'sales', null);
       this.speechlet = new speechlet();
    }
-
+   /**
+    * async cityGroupBy - Return data given just a city
+    *
+    * @param  {type} city     The city to return data for
+    * @param  {type} grouping Method of grouping sales
+    * @param  {type} user     UserID of requester
+    * @return JSON            Emits JSON result through SocketIO
+    */
    async cityGroupBy(city, grouping, user) {
       let barObj = {},
          pieObj = {},
@@ -45,6 +51,14 @@ module.exports = class sales extends mongo {
       }
    }
 
+   /**
+    * async stateGroupBy - Return data of a given state
+    *
+    * @param  {type} state    The state to query for
+    * @param  {type} grouping Method of grouping sales
+    * @param  {type} user     UserID of requester
+    * @return {type}          Emits JSON result through SocketIO
+    */
    async stateGroupBy(state, grouping, user) {
       let barObj = {},
          pieObj = {},
@@ -73,6 +87,15 @@ module.exports = class sales extends mongo {
       }
    }
 
+   /**
+    * async cityStateGroupBy - Return data for a given city, state
+    *
+    * @param  {type} city  The city to query for
+    * @param  {type} state The state to query for
+    * @param  {type} group Method of grouping sales
+    * @param  {type} user  UserID of requester
+    * @return {type}       JSON results returned to client through SocketIO
+    */
    async cityStateGroupBy(city, state, group, user) {
       let pieObject = {},
          barObject = {},
@@ -102,6 +125,16 @@ module.exports = class sales extends mongo {
       }
    } // ghetto way of doing math NOT in mongoDB
 
+   /**
+    * async mapCityStateGroupBy - Build results for viewing on map overlay
+    *
+    * @param  {type} city  The city to query for
+    * @param  {type} state The state to query for
+    * @param  {type} group Method of grouping sales
+    * @param  {type} name  Name of dealership to view
+    * @param  {type} user  UserID of requester
+    * @return {type}       SocketIO broadcast of resulting data
+    */
    async mapCityStateGroupBy(city, state, group, name, user) {
       let pieObject = {},
          barObject = {},
@@ -126,18 +159,39 @@ module.exports = class sales extends mongo {
       }
    }
 
+   /**
+    * changeViewToHome - Handle request to change VR view to home
+    *
+    * @return {type}  Emits trigger for Unity VR
+    */
    changeViewToHome() {
       this.socketIO.socket.emit('home');
    }
 
+   /**
+    * async changeViewToMap - Handle request to chagne VR view to map
+    *
+    * @param  {type} city  City to view on the map
+    * @param  {type} state State to view
+    * @param  {type} name  Dealership name to view
+    * @param  {type} user  UserID of requester
+    * @return {type}       Emits request to Unity through SocketIO
+    */
    async changeViewToMap(city, state, name, user) {
       let mapAgg = this.aggregateBuilder.mapLatLng(city, state, name)
       let result = await this.aggregate(mapAgg);
 
-      this.socketIO.socket.emit('map', result[0]);
+
       return result
    }
 
+   /**
+    * async parseSuggestion - Provide suggestions based on previous request
+    *
+    * @param  {type} params JSON of previous request, such as city or state
+    * @param  {type} query  UserID of requester
+    * @return {type}        Verbal response from Alexa
+    */
    async parseSuggestion(params, query) {
       if (params.name) {
          let result = await this.mapCityStateGroupBy(params.city, params.state, query.group, params.name, query.userID)
@@ -169,6 +223,14 @@ module.exports = class sales extends mongo {
       }
    }
 
+   /**
+    * emitter - Send results to Unity via SocketIO
+    *
+    * @param  {type} barObj    Results formatted for bar chart
+    * @param  {type} pieObj    Results formatted for pie chart
+    * @param  {type} bubbleObj Results formatted for bubble chart
+    * @return {type}           Emits SocketIO broadcast
+    */
    emitter(barObj, pieObj, bubbleObj) {
       this.socketIO.socket.emit('Bar_Chart', barObj);
       this.socketIO.socket.emit('Pie_Chart', pieObj);

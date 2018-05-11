@@ -1,7 +1,17 @@
+/**
+ * This module is for providing a suggestion based on a user's request
+ */
 module.exports = class suggestion {
    constructor() {
    }
 
+   /**
+    * randomSuggestion - Randomly decide what method to use for making a
+    * suggestion   
+    *
+    * @param  {type} lastQuery JSON object of previous request
+    * @return {type}           Suggestion to make to user
+    */
    randomSuggestion(lastQuery) {
       let logObj = { query: lastQuery, time: new Date() }
       let TF = parseInt(Math.random() * 10 + 1) % 2
@@ -13,8 +23,15 @@ module.exports = class suggestion {
 
 
       return logObj
-   } // this is bad.. but atleast it offers suggestions
+   }
 
+   /**
+    * flipGroup - Suggest flipping the group
+    *
+    *
+    * @param  {type} lastQuery JSON object of previous request
+    * @return {type}           Suggestion to make to user
+    */
    flipGroup(lastQuery) {
       let suggestionQuery = JSON.parse(JSON.stringify(lastQuery))
       if (suggestionQuery.query.group == 'color')
@@ -22,12 +39,19 @@ module.exports = class suggestion {
       else
          suggestionQuery.query.group = 'color'
       return suggestionQuery
-   } // need to de-hard code this in the future for more groups.
+   }
 
    createSuggestion(lastQuery) {
       return this.randomSuggestion(lastQuery)
    }
 
+   /**
+    * regionalSuggestion - Suggest zooming out a level
+    * e.g. Suggest requesting Oregon after requesting Portland, Oregon
+    *
+    * @param  {type} lastQuery JSON object of previous request
+    * @return {type}           Suggestion to make to user
+    */
    regionalSuggestion(lastQuery) {
       let suggestionQuery = JSON.parse(JSON.stringify(lastQuery))
       if (suggestionQuery.params.name) {

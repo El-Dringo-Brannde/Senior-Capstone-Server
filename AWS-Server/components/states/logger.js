@@ -8,6 +8,14 @@ module.exports = class logger extends mongoDB {
       this.suggest = new suggest()
    }
 
+   /**
+    * async logRoute - Log requests in database in order to suggest requests and
+    * enable refining previous requests
+    *
+    * @param  {type} req    JSON object of request that was made
+    * @param  {type} userID UserID of the requester
+    * @return {type}        None
+    */
    async logRoute(req, userID) {
       let lastQuery = {
          userID: userID

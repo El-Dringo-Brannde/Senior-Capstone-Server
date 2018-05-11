@@ -1,3 +1,7 @@
+/**
+ * routes.js
+ * The primary file for routing requests
+ */
 var router = require('express')
    .Router();
 var sales = require('./logic');
@@ -164,8 +168,6 @@ module.exports = function(mongo, socket) {
       suggested = suggested[0].suggestion
       suggested = await sales.parseSuggestion(suggested.params, suggested.query)
 
-      // sales.parseSuggestion(suggest)
-
       res.json({
          data: suggested.data,
          speechlet: suggested.speech
@@ -179,7 +181,7 @@ module.exports = function(mongo, socket) {
          data: 'ok'
       });
    });
-
+   // log the latest request and update session state
    function logAndUpdate(req, user) {
       let lastQuery = logger.logRoute(req, user);
       states.updateState(req, user);

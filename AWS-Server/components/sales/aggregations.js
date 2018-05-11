@@ -1,3 +1,6 @@
+/**
+ * Create a query for the database from the request the user made
+ */
 class salesAggregates {
    constructor() {}
 
