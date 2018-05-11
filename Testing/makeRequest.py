@@ -71,9 +71,10 @@ def printHelp():
 #Intro to be shown upon startup
 def printIntro():
 	print('****************************')
-	print('This script allows for testing the VR portion of the project without needing to set up an Echo with the custom commands')
+	print('This script allows for testing the VR portion of the project without needing to connect an Echo to our custom skill. ')
 	print('Sales were generated randomly, which means some cities were not used. If a request returns no results please try a different location')
-	print('')
+	print('Please note that this script is not part of our requirements and was created to assist with grading and offline demos at Expo.')
+	print('It may allow for requests that Alexa would not, which can result in unexpected results or errors.')
 	printHelp()
 	print('****************************')
 
@@ -115,13 +116,10 @@ def swap_view():
 	userID = 'amzn1.ask.account.testing'
 
 	if(view == 'home'):
-		query = 'map/name/chads%20clunkers/state/' + state + '/city/' + city + '/?userID=' + userID + '&group=' + grouping
+		query = 'mapView/name/chads%20clunkers/state/' + state + '/city/' + city + '/?userID=' + userID + '&group=' + grouping
 
 		reqResult = urllib.request.urlopen(serverURL + query)
 
-		data = reqResult.read()
-		dataEncoding = reqResult.info().get_content_charset('utf-8')
-		jsonData = json.loads(data.decode(dataEncoding))
 		view = 'map'
 	else:
 		makeRequest(serverURL + 'home/')
@@ -135,7 +133,7 @@ def getCommand():
 
 	command = input('Command: ')
 	if(command == 'help'):
-		printIntro()
+		printHelp()
 	elif(command == 'demos'):
 		print('demo stuff')
 	elif(command == 'city'):
@@ -168,5 +166,4 @@ def getCommand():
 	getCommand()
 
 printIntro()
-
 getCommand()
