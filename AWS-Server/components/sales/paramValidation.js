@@ -9,6 +9,13 @@ let util = require('util');
 class salesValidator {
    constructor() { }
 
+   /**
+    * checkResult - Check for errors in a request
+    *
+    * @param  {type} req Given request to check
+    * @param  {type} res Result of check(s)
+    * @return {type}     Null if no errors, or error speechlet for Alexa
+    */
    checkResult(req, res) {
       let errors = validationResult(req)
       if (!errors.isEmpty())
@@ -18,6 +25,14 @@ class salesValidator {
          })
    }
 
+   /**
+    * nameCityState - Check city, state, and dealership request have valid
+    * components
+    *
+    * @return {type}
+    * If no errors - Null
+    * Else - Error encountered
+    */
    nameCityState() {
       return [
          check('city')
@@ -43,6 +58,14 @@ class salesValidator {
       ]
    }
 
+   /**
+    * nameGroupCityState - Check city, state, grouping, and dealership request have valid
+    * components
+    *
+    * @return {type}
+    * If no errors - Null
+    * Else - Error encountered
+    */
    nameGroupCityState() {
       return [
          check('city')
@@ -71,7 +94,13 @@ class salesValidator {
       ]
    }
 
-   //Param Validation for state
+   /**
+    * state - Check that state request has valid components
+    *
+    * @return {type}
+    * If no errors - Null
+    * Else - Error encountered
+    */
    state() {
       return [
          check('state')
@@ -86,7 +115,13 @@ class salesValidator {
       ] // check against US state array
    }
 
-   //Param Validation for city
+   /**
+    * city - Check that city request has valid components
+    *
+    * @return {type}
+    * If no errors - Null
+    * Else - Error encountered
+    */
    city() {
       return [
          check('city')
@@ -101,7 +136,13 @@ class salesValidator {
       ] // check against US state array
    }
 
-   //Param validation for city & state
+   /**
+    * cityState - Check that city, state request has valid components
+    *
+    * @return {type}
+    * If no errors - Null
+    * Else - Error encountered
+    */
    cityState() {
       return [
          check('city')

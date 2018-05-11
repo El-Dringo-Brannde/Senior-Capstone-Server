@@ -1,3 +1,6 @@
+/**
+ * Utility functions for sale aggregation
+ */
 class salesUtility {
    constructor() {}
 

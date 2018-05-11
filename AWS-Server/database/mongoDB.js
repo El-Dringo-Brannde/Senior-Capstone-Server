@@ -1,3 +1,6 @@
+/*
+ * Module for retrieving results from the database
+ */
 let crud = require('./CRUD');
 
 class mongoDB extends crud {

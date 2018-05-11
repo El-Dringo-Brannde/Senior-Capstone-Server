@@ -1,3 +1,6 @@
+/**
+ * Module for easy manipulation of the database
+ */
 var mongoObj = require('mongodb')
    .ObjectID;
 
@@ -10,7 +13,7 @@ module.exports = class CRUD {
       this.onInit();
    }
 
-   onInit() {} // virtual func
+   onInit() {}
 
    async update(selector, updateData) {
       return await this.db.update(selector, {
